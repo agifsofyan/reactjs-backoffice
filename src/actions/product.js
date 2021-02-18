@@ -37,7 +37,7 @@ export const deleteMany = (ids) => async dispatch => {
     const data = { id: ids }
     console.log(data);
     try {
-        const res = await api.delete('/products/delete/multiple', data);
+        const res = await api.delete('/products/delete/multiple', { data });
         dispatch({ type: DELETE_PRODUCT_MANY, payload: res.data });
     } catch (error) {
         console.log(`[product.deleteMany] error: ${error}`);
