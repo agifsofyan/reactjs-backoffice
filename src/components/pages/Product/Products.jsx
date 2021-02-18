@@ -31,7 +31,7 @@ import SnackbarInfo from '../../layouts/SnackbarInfo';
 const Products = ({ products, delete_product_many, setLoading, fetch, deleteMany }) => {
     React.useEffect(() => {
         fetch();
-    },[products, fetch]);
+    },[]);
 
     const [responsive, setResponsive] = React.useState('vertical');
     const [tableBodyHeight, setTableBodyHeight] = React.useState('100%');
