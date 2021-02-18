@@ -1,0 +1,16 @@
+export const ME = 'ME';
+export const ME_ERROR = 'ME_ERROR';
+
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+
+export const GET_PRODUCTS = 'GET_PRODUCTS';
+export const GET_PRODUCTS_FAIL = 'GET_PRODUCTS_FAIL';
+
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';
+export const DELETE_PRODUCT_FAIL = 'DELETE_PRODUCT_FAIL';
+
+export const DELETE_PRODUCT_MANY = 'DELETE_PRODUCT_MANY';
+export const DELETE_PRODUCT_MANY_FAIL = 'DELETE_PRODUCT_MANY_FAIL';
+
+export const LOGOUT = 'LOGOUT';
