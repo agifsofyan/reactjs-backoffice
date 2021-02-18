@@ -9,15 +9,9 @@ import {
 
 import api from '../utils/api';
 
-const token = localStorage.token;
-
 export const fetch = () => async dispatch => {
     try {
-        const res = await api.get('/products/list/count', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const res = await api.get('/products/list/count');
         dispatch({ type: GET_PRODUCTS, payload: res.data.data });
     } catch (error) {
         console.log(`[product.fetch] error: ${error}`);
@@ -30,9 +24,6 @@ export const deleteOne = (id) => async dispatch => {
         const res = await api.delete('/products', {
             params: {
                 id
-            },
-            headers: {
-                'Authorization': `Bearer ${token}`
             }
         });
         dispatch({ type: DELETE_PRODUCT, payload: res.data });
@@ -45,12 +36,7 @@ export const deleteOne = (id) => async dispatch => {
 export const deleteMany = (ids) => async dispatch => {
     const data = { id: ids }
     try {
-        const res = await api.delete('/products/delete/multiple', {
-            data,
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const res = await api.delete('/products/delete/multiple', data);
         dispatch({ type: DELETE_PRODUCT_MANY, payload: res.data });
     } catch (error) {
         console.log(`[product.deleteMany] error: ${error}`);
