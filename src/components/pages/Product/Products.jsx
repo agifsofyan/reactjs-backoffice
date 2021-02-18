@@ -31,6 +31,7 @@ import SnackbarInfo from '../../layouts/SnackbarInfo';
 const Products = ({ products, delete_product_many, setLoading, fetch, deleteMany }) => {
     React.useEffect(() => {
         fetch();
+        // eslint-disable-next-line
     },[]);
 
     const [responsive, setResponsive] = React.useState('vertical');
