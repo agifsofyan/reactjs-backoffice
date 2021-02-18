@@ -46,7 +46,9 @@ const Products = ({ products, delete_product_many, setLoading, fetch, deleteMany
         {
             name: '_id',
             options: {
-                display: false
+                display: false,
+                filter: false,
+                sort: false
             }
         },
         { 

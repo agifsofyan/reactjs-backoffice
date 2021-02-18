@@ -9,7 +9,7 @@ import {
 
 import api from '../utils/api';
 
-const token = localStorage.token ? localStorage.token : '';
+const token = localStorage.token;
 
 export const fetch = () => async dispatch => {
     try {
