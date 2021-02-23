@@ -85,31 +85,31 @@ const ListMenu = () => {
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItem button className={classes.nested}>
+                    <ListItem button className={classes.nested} component={Link} to="/topics">
                         <ListItemIcon>
                             <BookTwoToneIcon />
                         </ListItemIcon>
                         <ListItemText primary="Topics" />
                     </ListItem>
-                    <ListItem button className={classes.nested}>
+                    <ListItem button className={classes.nested} component={Link} to="/roles">
                         <ListItemIcon>
                             <SecurityTwoToneIcon />
                         </ListItemIcon>
                         <ListItemText primary="Roles" />
                     </ListItem>
-                    <ListItem button className={classes.nested}>
+                    <ListItem button className={classes.nested} component={Link} to="/admins">
                         <ListItemIcon>
                             <PeopleAltTwoToneIcon />
                         </ListItemIcon>
                         <ListItemText primary="Administrators" />
                     </ListItem>
-                    <ListItem button className={classes.nested}>
+                    <ListItem button className={classes.nested} component={Link} to="/coupons">
                         <ListItemIcon>
                             <LocalOfferTwoToneIcon />
                         </ListItemIcon>
                         <ListItemText primary="Coupons" />
                     </ListItem>
-                    <ListItem button className={classes.nested}>
+                    <ListItem button className={classes.nested} component={Link} to="/payments">
                         <ListItemIcon>
                             <AccountBalanceWalletTwoToneIcon />
                         </ListItemIcon>

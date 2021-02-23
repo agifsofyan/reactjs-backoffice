@@ -2,8 +2,18 @@ import { combineReducers } from 'redux';
 
 import auth from './auth';
 import product from './product';
+import topic from './topic';
+import role from './role';
+import admin from './admin';
+import coupon from './coupon';
+import payment from './payment';
 
 export default combineReducers({
     auth,
-    product 
+    product,
+    topic,
+    role,
+    admin,
+    coupon,
+    payment
 });

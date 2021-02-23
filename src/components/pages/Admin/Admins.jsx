@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
-import NumberFormat from 'react-number-format';
 
 import PropTypes from 'prop-types';
 
@@ -12,31 +11,27 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-// import Chip from '@material-ui/core/Chip';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-// import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
-// import LocalOfferTwoToneIcon from '@material-ui/icons/LocalOfferTwoTone';
-// import InsertDriveFileTwoToneIcon from '@material-ui/icons/InsertDriveFileTwoTone';
 
 import { Divider } from '@material-ui/core';
 
 import MUIDataTable from 'mui-datatables';
 import Swal from 'sweetalert2';
 
-import { fetchProduct, deleteManyProduct } from '../../../actions/product';
+import { fetchAdmin, deleteManyAdmin } from '../../../actions/admin';
 
 import Spinner from '../../layouts/Spinner';
 import SnackbarInfo from '../../layouts/SnackbarInfo';
 
-const Products = ({ 
-    products, 
-    delete_product_many, 
+const Admins = ({ 
+    admins, 
+    delete_admin_many, 
     setLoading, 
-    fetchProduct, 
-    deleteManyProduct
+    fetchAdmin, 
+    deleteManyAdmin
 }) => {
     React.useEffect(() => {
-        fetchProduct();
+        fetchAdmin();
         // eslint-disable-next-line
     },[]);
 
@@ -59,126 +54,61 @@ const Products = ({
             }
         },
         { 
-            label: 'Product Name',
+            label: 'Admin Name',
             name: 'name', 
             options: { 
+                filter: false,
+                sort: false,
                 filterOptions: { 
                     fullWidth: true 
                 }
             } 
         },
         {
-            label: 'Visibility',
-            name: 'visibility',
+            label: 'Email',
+            name: 'email',
             options: {
                 filter: true,
                 sort: true
             }
         },
         {
-            label: 'Product Code',
-            name: 'code',
+            label: 'Role',
+            name: 'role',
             options: {
-                filter: false
-            }
-        },
-        // {
-        //     label: 'Stock(s)',
-        //     // name: 'type',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             if (value.type !== 'ecommerce') {
-        //                 return <span><code>none</code></span>
-        //             } else if (value.ecommerce === undefined) {
-        //                 return <span>0</span>
-        //             } else {
-        //                 return <span>{value.ecommerce.stock}</span>
-        //             }
-        //         }
-        //     }
-        // },
-        // {
-        //     label: 'Others',
-        //     // name: 'order',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             return (
-        //                 <>
-        //                     <Chip
-        //                         icon={<ShoppingCartTwoToneIcon />}
-        //                         label={`Orders ${value}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<LocalOfferTwoToneIcon />}
-        //                         label={`Coupons ${value.coupon}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<InsertDriveFileTwoToneIcon />}
-        //                         label={`Contents ${value.content}`} 
-        //                         size="small"
-        //                     />
-        //                 </>
-        //             )
-        //         }
-        //     }
-        // },
-        {
-            label: 'Product Type',
-            name: 'type',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Sale Method',
-            name: 'sale_method',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Period',
-            name: 'time_period',
-            options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <span>{v > 1 ? v + ' months' : v + ' month'}</span>
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <span>{value > 1 ? value + ' months' : value + ' month'}</span>
+                filter: false,
+                customBodyRender: v => {
+                    return <span>{v[0].adminType}</span>
                 }
             }
         },
         {
-            label: 'Price',
-            name: 'price',
+            label: 'Phone Number',
+            name: 'phone_number',
             options: {
                 filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
-                }
+                sort: true
             }
         },
         {
-            label: 'Date',
+            label: 'Date Created',
             name: 'created_at',
+            options: {
+                filter: true,
+                filterOptions: {
+                    renderValue: v => {
+                        return <Moment format="llll">{v}</Moment>
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <Moment format="llll">{value}</Moment>
+                }
+            }
+        },
+        {
+            label: 'Date Updated',
+            name: 'updated_at',
             options: {
                 filter: true,
                 filterOptions: {
@@ -213,10 +143,10 @@ const Products = ({
         //     console.dir(state);
         // },
         onRowsDelete: (rowsDeleted) => {
-            const ids = rowsDeleted.data.map(row => products[row.dataIndex]._id);
+            const ids = rowsDeleted.data.map(row => admins[row.dataIndex]._id);
             Swal.fire({
                 title: 'Delete Confirmation',
-                html: `<small>Are you sure you want to delete ${ids.length > 1 ? 'these ' + ids.length + ' products' : 'this product'}?</small>`,
+                html: `<small>Are you sure you want to delete ${ids.length > 1 ? 'these ' + ids.length + ' admins' : 'this admin'}?</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -224,7 +154,7 @@ const Products = ({
                 confirmButtonText: 'Sure, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    deleteManyProduct(ids);
+                    deleteManyAdmin(ids);
                 }
             });
         }
@@ -232,7 +162,7 @@ const Products = ({
 
     return (
         <React.Fragment>
-            <SnackbarInfo info="success" message={delete_product_many && delete_product_many.message} />
+            <SnackbarInfo info="success" message={delete_admin_many && delete_admin_many.message} />
             <FormControl>
                 <InputLabel id="demo-simple-select-label">Responsive Option</InputLabel>
                 <Select
@@ -347,7 +277,7 @@ const Products = ({
             {setLoading ? <Spinner /> : (
                 <MUIDataTable 
                     title={<div>
-                        <h2>Product List</h2>
+                        <h2>Admin List</h2>
                         <Button
                             variant="contained"
                             color="default"
@@ -355,12 +285,12 @@ const Products = ({
                             size="small"
                             startIcon={<AddCircleTwoToneIcon />}
                             component={Link}
-                            to="/product/add"
+                            to="/admin/add"
                         >
                             Add New
                         </Button>
                     </div>} 
-                    data={products} 
+                    data={admins} 
                     columns={columns} 
                     options={options} 
                 />
@@ -369,18 +299,18 @@ const Products = ({
     )
 }
 
-Products.propTypes = {
-    fetchProduct: PropTypes.func.isRequired,
-    deleteManyProduct: PropTypes.func.isRequired,
-    products: PropTypes.array,
-    delete_product_many: PropTypes.object,
+Admins.propTypes = {
+    fetchAdmin: PropTypes.func.isRequired,
+    deleteManyAdmin: PropTypes.func.isRequired,
+    admins: PropTypes.array,
+    delete_admin_many: PropTypes.object,
     setLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
-    products: state.product.products,
-    delete_product_many: state.product.delete_product_many,
-    setLoading: state.product.setLoading
+    admins: state.admin.admins,
+    delete_admin_many: state.admin.delete_admin_many,
+    setLoading: state.admin.setLoading
 });
 
-export default connect(mapStateToProps, { fetchProduct, deleteManyProduct })(Products);
+export default connect(mapStateToProps, { fetchAdmin, deleteManyAdmin })(Admins);

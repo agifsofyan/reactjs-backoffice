@@ -1,50 +1,40 @@
 import {
-    GET_PRODUCTS,
-    GET_PRODUCTS_FAIL,
-    DELETE_PRODUCT_MANY,
-    DELETE_PRODUCT_MANY_FAIL
+    GET_COUPONS,
+    GET_COUPONS_FAIL,
+    DELETE_COUPON_MANY,
+    DELETE_COUPON_MANY_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    products: null,
-    delete_product_many: null,
+    coupons: null,
+    delete_coupon_many: null,
     error: null,
     setLoading: true
 }
-
-const newProducts = []
 
 export default function (state = INITIAL_STATE, action) {
     const { type, payload } = action;
 
     switch (type) {
-        case GET_PRODUCTS:
-            // merge count into product object
-            payload.map((item, i) => {
-                Object.assign(item.product, item.count);
-                delete item.count;
-            });
-            payload.map(item => {
-                newProducts.push(item.product);
-            });
+        case GET_COUPONS:
             return {
                 ...state,
-                products: newProducts,
+                coupons: payload,
                 setLoading: false
             }
-        case GET_PRODUCTS_FAIL:
+        case GET_COUPONS_FAIL:
             return {
                 ...state,
                 error: payload,
                 setLoading: false
             }
-        case DELETE_PRODUCT_MANY:
+        case DELETE_COUPON_MANY:
             return {
                 ...state,
-                delete_product_many: payload,
+                delete_coupon_many: payload,
                 setLoading: false
             }
-        case DELETE_PRODUCT_MANY_FAIL:
+        case DELETE_COUPON_MANY_FAIL:
             return {
                 ...state,
                 error: payload,

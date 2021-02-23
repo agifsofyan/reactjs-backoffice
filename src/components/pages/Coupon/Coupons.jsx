@@ -12,31 +12,31 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-// import Chip from '@material-ui/core/Chip';
+import Chip from '@material-ui/core/Chip';
+import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone';
+import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
+import LocalOfferTwoToneIcon from '@material-ui/icons/LocalOfferTwoTone';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-// import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
-// import LocalOfferTwoToneIcon from '@material-ui/icons/LocalOfferTwoTone';
-// import InsertDriveFileTwoToneIcon from '@material-ui/icons/InsertDriveFileTwoTone';
 
 import { Divider } from '@material-ui/core';
 
 import MUIDataTable from 'mui-datatables';
 import Swal from 'sweetalert2';
 
-import { fetchProduct, deleteManyProduct } from '../../../actions/product';
+import { fetchCoupon, deleteManyCoupon } from '../../../actions/coupon';
 
 import Spinner from '../../layouts/Spinner';
 import SnackbarInfo from '../../layouts/SnackbarInfo';
 
-const Products = ({ 
-    products, 
-    delete_product_many, 
+const Coupons = ({ 
+    coupons, 
+    delete_coupon_many, 
     setLoading, 
-    fetchProduct, 
-    deleteManyProduct
+    fetchCoupon, 
+    deleteManyCoupon
 }) => {
     React.useEffect(() => {
-        fetchProduct();
+        fetchCoupon();
         // eslint-disable-next-line
     },[]);
 
@@ -59,110 +59,44 @@ const Products = ({
             }
         },
         { 
-            label: 'Product Name',
+            label: 'Coupon Name',
             name: 'name', 
             options: { 
+                filter: false,
+                sort: false,
                 filterOptions: { 
                     fullWidth: true 
                 }
             } 
         },
         {
-            label: 'Visibility',
-            name: 'visibility',
+            label: 'Type',
+            name: 'type',
             options: {
                 filter: true,
                 sort: true
             }
         },
         {
-            label: 'Product Code',
+            label: 'Code',
             name: 'code',
             options: {
-                filter: false
-            }
-        },
-        // {
-        //     label: 'Stock(s)',
-        //     // name: 'type',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             if (value.type !== 'ecommerce') {
-        //                 return <span><code>none</code></span>
-        //             } else if (value.ecommerce === undefined) {
-        //                 return <span>0</span>
-        //             } else {
-        //                 return <span>{value.ecommerce.stock}</span>
-        //             }
-        //         }
-        //     }
-        // },
-        // {
-        //     label: 'Others',
-        //     // name: 'order',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             return (
-        //                 <>
-        //                     <Chip
-        //                         icon={<ShoppingCartTwoToneIcon />}
-        //                         label={`Orders ${value}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<LocalOfferTwoToneIcon />}
-        //                         label={`Coupons ${value.coupon}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<InsertDriveFileTwoToneIcon />}
-        //                         label={`Contents ${value.content}`} 
-        //                         size="small"
-        //                     />
-        //                 </>
-        //             )
-        //         }
-        //     }
-        // },
-        {
-            label: 'Product Type',
-            name: 'type',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Sale Method',
-            name: 'sale_method',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Period',
-            name: 'time_period',
-            options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <span>{v > 1 ? v + ' months' : v + ' month'}</span>
-                    }
-                },
-                sort: true,
+                filter: false,
                 customBodyRender: value => {
-                    return <span>{value > 1 ? value + ' months' : value + ' month'}</span>
+                    return (
+                        <Chip
+                            icon={<LocalOfferTwoToneIcon />}
+                            label={value} 
+                            size="small"
+                            style={{ marginRight: 5, marginBottom: 2 }}
+                        />
+                    )
                 }
             }
         },
         {
-            label: 'Price',
-            name: 'price',
+            label: 'Max Discount',
+            name: 'max_discount',
             options: {
                 filter: true,
                 filterOptions: {
@@ -173,6 +107,45 @@ const Products = ({
                 sort: true,
                 customBodyRender: value => {
                     return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                }
+            }
+        },
+        {
+            label: 'Value',
+            name: 'value',
+            options: {
+                filter: true,
+                filterOptions: {
+                    renderValue: v => {
+                        return <span>{v}%</span>
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <span>{value}%</span>
+                }
+            }
+        },
+        {
+            label: 'Status',
+            name: 'is_active',
+            options: {
+                filter: true,
+                filterOptions: {
+                    renderValue: v => {
+                        return <span>{v ? 'active' : 'inactive'}</span>
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return (
+                        <Chip
+                            icon={value ? <CheckTwoToneIcon /> : <CloseTwoToneIcon />}
+                            label={value ? 'active' : 'inactive'} 
+                            size="small"
+                            style={{ marginRight: 5, marginBottom: 2 }}
+                        />
+                    )
                 }
             }
         },
@@ -213,10 +186,10 @@ const Products = ({
         //     console.dir(state);
         // },
         onRowsDelete: (rowsDeleted) => {
-            const ids = rowsDeleted.data.map(row => products[row.dataIndex]._id);
+            const ids = rowsDeleted.data.map(row => coupons[row.dataIndex]._id);
             Swal.fire({
                 title: 'Delete Confirmation',
-                html: `<small>Are you sure you want to delete ${ids.length > 1 ? 'these ' + ids.length + ' products' : 'this product'}?</small>`,
+                html: `<small>Are you sure you want to delete ${ids.length > 1 ? 'these ' + ids.length + ' coupons' : 'this coupon'}?</small>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -224,7 +197,7 @@ const Products = ({
                 confirmButtonText: 'Sure, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    deleteManyProduct(ids);
+                    deleteManyCoupon(ids);
                 }
             });
         }
@@ -232,7 +205,7 @@ const Products = ({
 
     return (
         <React.Fragment>
-            <SnackbarInfo info="success" message={delete_product_many && delete_product_many.message} />
+            <SnackbarInfo info="success" message={delete_coupon_many && delete_coupon_many.message} />
             <FormControl>
                 <InputLabel id="demo-simple-select-label">Responsive Option</InputLabel>
                 <Select
@@ -347,7 +320,7 @@ const Products = ({
             {setLoading ? <Spinner /> : (
                 <MUIDataTable 
                     title={<div>
-                        <h2>Product List</h2>
+                        <h2>Coupon List</h2>
                         <Button
                             variant="contained"
                             color="default"
@@ -355,12 +328,12 @@ const Products = ({
                             size="small"
                             startIcon={<AddCircleTwoToneIcon />}
                             component={Link}
-                            to="/product/add"
+                            to="/coupon/add"
                         >
                             Add New
                         </Button>
                     </div>} 
-                    data={products} 
+                    data={coupons} 
                     columns={columns} 
                     options={options} 
                 />
@@ -369,18 +342,18 @@ const Products = ({
     )
 }
 
-Products.propTypes = {
-    fetchProduct: PropTypes.func.isRequired,
-    deleteManyProduct: PropTypes.func.isRequired,
-    products: PropTypes.array,
-    delete_product_many: PropTypes.object,
+Coupons.propTypes = {
+    fetchCoupon: PropTypes.func.isRequired,
+    deleteManyCoupon: PropTypes.func.isRequired,
+    coupons: PropTypes.array,
+    delete_coupon_many: PropTypes.object,
     setLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
-    products: state.product.products,
-    delete_product_many: state.product.delete_product_many,
-    setLoading: state.product.setLoading
+    coupons: state.coupon.coupons,
+    delete_coupon_many: state.coupon.delete_coupon_many,
+    setLoading: state.coupon.setLoading
 });
 
-export default connect(mapStateToProps, { fetchProduct, deleteManyProduct })(Products);
+export default connect(mapStateToProps, { fetchCoupon, deleteManyCoupon })(Coupons);

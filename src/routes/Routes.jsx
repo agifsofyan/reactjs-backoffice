@@ -9,8 +9,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import Login from '../components/pages/Login/Login';
 import Navbar from '../components/layouts/Navbar/Navbar';
 import Dashboard from '../components/pages/Dashboard';
+
 import Products from '../components/pages/Product/Products';
-import TabsProduct from '../components/pages/Product/TabsProduct';
+import TabsAddProduct from '../components/pages/Product/TabsAddProduct';
+
+import Topics from '../components/pages/Topic/Topics';
+import Roles from '../components/pages/Role/Roles';
+import Admins from '../components/pages/Admin/Admins';
+import Coupons from '../components/pages/Coupon/Coupons';
+import Payments from '../components/pages/Payment/Payments';
+
 import Footer from '../components/layouts/Footer/Footer';
 
 import PrivateRoute from './PrivateRoute';
@@ -53,7 +61,13 @@ const Routes = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         <PrivateRoute exact path="/dashboard" component={Dashboard} />
                         <PrivateRoute exact path="/products" component={Products} />
-                        <PrivateRoute exact path="/products/add" component={TabsProduct} />
+                        <PrivateRoute exact path="/product/add" component={TabsAddProduct} />
+
+                        <PrivateRoute exact path="/topics" component={Topics} />
+                        <PrivateRoute exact path="/roles" component={Roles} />
+                        <PrivateRoute exact path="/admins" component={Admins} />
+                        <PrivateRoute exact path="/coupons" component={Coupons} />
+                        <PrivateRoute exact path="/payments" component={Payments} />
                         <Box pt={4}>
                             <Footer />
                         </Box>
