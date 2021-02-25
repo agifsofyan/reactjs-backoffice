@@ -7,6 +7,7 @@ import role from './role';
 import admin from './admin';
 import coupon from './coupon';
 import payment from './payment';
+import agent from './agent';
 
 export default combineReducers({
     auth,
@@ -15,5 +16,6 @@ export default combineReducers({
     role,
     admin,
     coupon,
-    payment
+    payment,
+    agent
 });

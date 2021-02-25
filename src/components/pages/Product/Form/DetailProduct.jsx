@@ -1,16 +1,14 @@
 import React from 'react';
 import Select from 'react-select';
 
-import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
-import VideocamTwoToneIcon from '@material-ui/icons/VideocamTwoTone';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import NumberFormat from 'react-number-format';
+import slugify from 'react-slugify';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AddDetailProduct = (props) => {
+const DetailProduct = (props) => {
     const classes = useStyles();
 
     const productTypes = [
@@ -58,11 +56,13 @@ const AddDetailProduct = (props) => {
 
     const {
         name,
+        slug,
         type,
         price,
         time_period,
         visibility,
         sale_method,
+        // point_gamification,
 
         onChange,
 
@@ -80,12 +80,7 @@ const AddDetailProduct = (props) => {
         charge_checked,
         sale_price,
 
-        onHandleProductEcommerce,
-
-        images,
-        setProductImages,
-        productImageUrl,
-        setProductImageUrl
+        onHandleProductEcommerce
     } = props;
 
     console.log('[DetailProduct.form.name]', name);
@@ -96,6 +91,7 @@ const AddDetailProduct = (props) => {
     console.log('[DetailProduct.form.type]', type);
     console.log('[DetailProduct.form.visibility]', visibility);
     console.log('[DetailProduct.form.sale_method]', sale_method);
+    // console.log('[DetailProduct.form.point_gamification]', point_gamification);
     console.log('[DetailProduct.productEcommerce.shipping_charges', charge_checked);
     console.log('[DetailProduct.productEcommerce.weight', weight);
     console.log('[DetailProduct.productEcommerce.stock', stock);
@@ -111,6 +107,15 @@ const AddDetailProduct = (props) => {
                 onChange={onChange}
             />
             <TextField
+                label="Product Slug"
+                type="text"
+                name="slug"
+                id="slug"
+                value={slugify(slug)}
+                helperText={`${slug == '' ? slugify(name) : slugify(slug)}`}
+                onChange={onChange}
+            />
+            <TextField
                 label="Time Period"
                 type="number"
                 name="time_period"
@@ -119,6 +124,14 @@ const AddDetailProduct = (props) => {
                 onChange={onChange}
                 helperText={`${time_period > 1 ? time_period + ' months' : time_period + ' month'}`}
             />
+            {/* <TextField
+                label="Point Gamification"
+                type="number"
+                name="point_gamification"
+                id="point_gamification"
+                value={point_gamification}
+                onChange={onChange}
+            /> */}
             <TextField
                 label="Regular Price"
                 type="number"
@@ -141,6 +154,7 @@ const AddDetailProduct = (props) => {
                 className={classes.select}
                 placeholder="Select Topic"
                 options={topics}
+                value={valueTopic}
                 getOptionValue={(option) => option._id}
                 getOptionLabel={(option) => option.name}
                 onChange={onProductTopicChange}
@@ -150,11 +164,12 @@ const AddDetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Product Type"
+                value={type}
                 options={productTypes}
                 onChange={onProductTypeChange}
                 isClearable
             />
-            {type === 'ecommerce' ? (
+            {type && type.value === 'ecommerce' ? (
                 <>
                     <TextField
                         label="Weight"
@@ -189,6 +204,7 @@ const AddDetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Visibility"
+                value={visibility}
                 options={productVisibilities}
                 onChange={onProductVisibilityChange}
                 isClearable
@@ -196,49 +212,13 @@ const AddDetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Sale Method"
+                value={sale_method}
                 options={productSaleMethods}
                 onChange={onProductSaleMethodChange}
                 isClearable
             />
-            <input
-                accept="image/x-png,image/gif,image/jpeg"
-                className={classes.input}
-                id="contained-button-file-image"
-                multiple
-                type="file"
-            />
-            <label htmlFor="contained-button-file-image">
-                <Button 
-                    variant="contained" 
-                    color="default" 
-                    component="span" 
-                    className={classes.btnUploads}
-                    startIcon={<PhotoCamera />}
-                    size="small"
-                >
-                    Image(s)
-                </Button>
-            </label>
-            <input
-                accept="video/mp4,video/x-m4v,video/*,image/x-png,image/gif,image/jpeg"
-                className={classes.input}
-                id="contained-button-file-media"
-                type="file"
-            />
-            <label htmlFor="contained-button-file-media">
-                <Button 
-                    variant="contained" 
-                    color="default"
-                    className={classes.btnUploads} 
-                    component="span" 
-                    startIcon={<VideocamTwoToneIcon />}
-                    size="small"
-                >
-                    Header Media
-                </Button>
-            </label>
         </form>
     )
 }
 
-export default AddDetailProduct;
+export default DetailProduct;

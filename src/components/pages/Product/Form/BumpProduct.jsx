@@ -2,7 +2,6 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -87,13 +86,16 @@ const BumpProduct = (props) => {
                 value={bump_heading}
                 onChange={onBumpChange}
             />
-            <TextareaAutosize
+            <TextField
                 id="bump_desc"
                 name="bump_desc"
                 value={bump_desc} 
-                rowsMin={5}
-                rowsMax={50} 
-                placeholder="Bump Description"
+                rowsmin={10}
+                rowsMax={100} 
+                variant="outlined"
+                multiline
+                style={{ width: '100%' }}
+                label="Bump Description"
                 onChange={onBumpChange} 
             />
             <input
