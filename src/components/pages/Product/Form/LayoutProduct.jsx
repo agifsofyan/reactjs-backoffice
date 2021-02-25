@@ -102,7 +102,7 @@ const LayoutProduct = (props) => {
                     initialValue={description ? description : null}
                     init={{
                         height: 300,
-                        width: 800,
+                        width: 833,
                         menubar: false,
                         plugins: [
                             'advlist autolink lists link image charmap print preview anchor',
