@@ -112,7 +112,8 @@ const DetailProduct = (props) => {
                 name="slug"
                 id="slug"
                 value={slugify(slug)}
-                helperText={`${slug == '' ? slugify(name) : slugify(slug)}`}
+                disabled={name === ''}
+                helperText={`${slug === '' ? slugify(name) : slugify(slug)}`}
                 onChange={onChange}
             />
             <TextField
