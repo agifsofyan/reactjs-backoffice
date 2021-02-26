@@ -8,6 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import NumberFormat from 'react-number-format';
 
+import NProgress from 'nprogress';
+
+import api from '../../../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,10 +41,10 @@ const BumpProduct = (props) => {
         bump_weight,
         bump_heading,
         bump_desc,
-        onBumpChange,
+        bump_image,
 
-        images,
-        setProductImages
+        onBumpChange,
+        setProductBumpImage
     } = props;
 
     console.log('[BumpProduct.bump.name]', bump_name);
@@ -49,6 +52,26 @@ const BumpProduct = (props) => {
     console.log('[BumpProduct.bump.weight]', bump_weight);
     console.log('[BumpProduct.bump.heading]', bump_heading);
     console.log('[BumpProduct.bump.desc]', bump_desc);
+    console.log('[BumpProduct.bump.image]', bump_image);
+
+    const onPostSingleImage = async (e) => {
+        NProgress.start();
+
+        const bodyForm = new FormData();
+        bodyForm.append('file', e.target.files[0]);
+        const res = await api.post('/uploads/products', bodyForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (res.data.result) {
+            NProgress.done();
+
+            setProductBumpImage(res.data.result.url);
+            console.log(bump_image);
+        }
+    }
 
     return (
         <form className={classes.root} noValidate autoComplete="off">
@@ -101,10 +124,11 @@ const BumpProduct = (props) => {
             <input
                 accept="image/x-png,image/gif,image/jpeg"
                 className={classes.input}
-                id="contained-button-file-image"
+                id="contained-button-file-image-bump"
                 type="file"
+                onChange={(e) => onPostSingleImage(e)}
             />
-            <label htmlFor="contained-button-file-image">
+            <label htmlFor="contained-button-file-image-bump">
                 <Button 
                     variant="contained" 
                     color="default"     
@@ -116,6 +140,16 @@ const BumpProduct = (props) => {
                     Image
                 </Button>
             </label>
+            {bump_image && (
+                <div style={{ width: '30%' }}>
+                    <img
+                        width="100%"
+                        height="100%"
+                        src={bump_image}
+                        alt={bump_image}
+                    />
+                </div>
+            )}
         </form>
     )
 }

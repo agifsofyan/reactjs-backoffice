@@ -1,15 +1,14 @@
 import React from 'react';
 import Select from 'react-select';
 
+import NumberFormat from 'react-number-format';
+import slugify from 'react-slugify';
+
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { makeStyles } from '@material-ui/core/styles';
-
-import NumberFormat from 'react-number-format';
-import slugify from 'react-slugify';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -80,7 +79,10 @@ const DetailProduct = (props) => {
         charge_checked,
         sale_price,
 
-        onHandleProductEcommerce
+        onHandleProductEcommerce,
+
+        imageUrl,
+        setProductImageUrl
     } = props;
 
     console.log('[DetailProduct.form.name]', name);

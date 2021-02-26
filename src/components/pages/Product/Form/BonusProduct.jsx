@@ -6,6 +6,10 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 import { makeStyles } from '@material-ui/core/styles';
 
+import NProgress from 'nprogress';
+
+import api from '../../../../utils/api';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -32,14 +36,34 @@ const BonusProduct = (props) => {
     const {
         bonus_title,
         bonus_description,
-        onBonusChange,
+        bonus_image,
 
-        images,
-        setProductImages
+        onBonusChange,
+        setProductBonusImage
     } = props;
 
     console.log('[BonusProduct.title]', bonus_title);
     console.log('[BonusProduct.description]', bonus_description);
+    console.log('[BonusProduct.image', bonus_image);
+    
+    const onPostSingleImage = async (e) => {
+        NProgress.start();
+
+        const bodyForm = new FormData();
+        bodyForm.append('file', e.target.files[0]);
+        const res = await api.post('/uploads/products', bodyForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (res.data.result) {
+            NProgress.done();
+
+            setProductBonusImage(res.data.result.url);
+            console.log(bonus_image);
+        }
+    }
 
     return (
         <form className={classes.root} noValidate autoComplete="off">
@@ -66,10 +90,11 @@ const BonusProduct = (props) => {
             <input
                 accept="image/x-png,image/gif,image/jpeg"
                 className={classes.input}
-                id="contained-button-file-image"
+                id="contained-button-file-image-bonus"
                 type="file"
+                onChange={(e) => onPostSingleImage(e)}
             />
-            <label htmlFor="contained-button-file-image">
+            <label htmlFor="contained-button-file-image-bonus">
                 <Button 
                     variant="contained" 
                     color="default"     
@@ -81,6 +106,16 @@ const BonusProduct = (props) => {
                     Image
                 </Button>
             </label>
+            {bonus_image && (
+                <div style={{ width: '30%' }}>
+                    <img
+                        width="100%"
+                        height="100%"
+                        src={bonus_image}
+                        alt={bonus_image}
+                    />
+                </div>
+            )}
         </form>
     )
 }

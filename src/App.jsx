@@ -11,6 +11,7 @@ import { setAuthToken } from './utils';
 import { me } from './actions/auth';
 
 import './App.css';
+import 'nprogress/nprogress.css';
 
 const App = () => {
   useEffect(() => {

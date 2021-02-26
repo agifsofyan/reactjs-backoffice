@@ -159,9 +159,9 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
         setProductSection(values);
     }
 
-    const onHandleChangeDynamicSectionImage = (i, e) => {
+    const onHandleChangeDynamicSectionImage = (i, url) => {
         const values = [...productSection];
-        values[i].image = e.target.value;
+        values[i].image = url;
         setProductSection(values);
     }
 
@@ -227,20 +227,16 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
     // ToDo: Description
 
     // Array of image_url
-    const [productImageUrl, setProductImageUrl] = React.useState({
-        image_url: []
-    });
-
-    // form.image_url = productImageUrl.image_url;
-    // form.media_url = productImages.image.media_url;
-
-    const onHandleEditorChange = content => {
-        setForm({ ...form, description: content });
-    }
+    const [productImageUrl, setProductImageUrl] = React.useState([]);
 
     const onHandleProductBump = e => {
         setProductBump({ ...productBump, [e.target.name]: e.target.value });
         console.log('[TabsAddProduct.onHandleProductBump]', productBump);
+    }
+
+    const setProductBumpImage = url => {
+        setProductBump({ ...productBump, bump_image: url });
+        console.log('[TabsAddProduct.setProductBumpImage]', productBump.bump_image);
     }
 
     const onHandleProductEcommerce = e => {
@@ -251,6 +247,11 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
     const onHandleProductBonus = e => {
         setProductBonus({ ...productBonus, [e.target.name]: e.target.value });
         console.log('[TabsAddProduct.onHandleProductBonus]', productBonus);
+    }
+
+    const setProductBonusImage = url => {
+        setProductBonus({ ...productBonus, image: url });
+        console.log('[TabsAddProduct.setProductBonusImage]', productBonus.image);
     }
 
     const onHandleProductFeature = e => {
@@ -330,6 +331,24 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
         console.log('[TabsAddProduct.onProductSaleMethodChange]', productSaleMethod);
     }
 
+    const onHandleChangeForm = e => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+        console.log('[TabsAddProduct.onHandleChangeForm]', form);
+    }
+
+    const onHandleEditorChange = content => {
+        setForm({ ...form, description: content });
+    }
+
+    const setMediaUrl = url => {
+        setForm({ ...form, media_url: url });
+    }
+
+    form.type = productType;
+    form.visibility = productVisibility;
+    form.sale_method = productSaleMethod;
+    form.image_url = productImageUrl;
+
     form.bump = [{ ...productBump }];
     form.ecommerce = { ...productEcommerce };
     form.bonus = { ...productBonus };
@@ -337,15 +356,6 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
 
     // productBump.bump_image = productImages.image.bump_image;
     // productBonus.image = productImages.image.image_bonus;
-
-    const onHandleChangeForm = e => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleChangeForm]', form);
-    }
-
-    form.type = productType;
-    form.visibility = productVisibility;
-    form.sale_method = productSaleMethod;
  
     const onHandleChange = (event, newValue) => {
         setValue(newValue);
@@ -415,8 +425,6 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
                             sale_method={form.sale_method}
                             sale_price={form.sale_price}
                             // point_gamification={form.point_gamification}
-                            imageUrl={productImageUrl}
-                            productImageUrl={setProductImageUrl}
                             stock={productEcommerce.stock}
                             onHandleProductEcommerce={onHandleProductEcommerce}
                             weight={productEcommerce.weight}
@@ -430,10 +438,14 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
                             subheadline={form.subheadline}
                             description={form.description}
                             agents={agents}
+                            media_url={form.media_url}
+                            setMediaUrl={setMediaUrl}
                             valueAgent={productAgent}
                             onProductAgentChange={onProductAgentChange}
                             onChange={onHandleChangeForm}
                             onEditorChange={onHandleEditorChange}
+                            imageUrl={productImageUrl}
+                            setProductImageUrl={setProductImageUrl}
                             learnAbout={productLearnAbout}
                             onHandleAddLearnAbout={onAddDynamicLearnAbout}
                             onHandleRemoveLearnAbout={onRemoveDynamicLearnAbout}
@@ -455,14 +467,18 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
                             bump_weight={productBump.bump_weight}
                             bump_heading={productBump.bump_heading}
                             bump_desc={productBump.bump_desc}
+                            bump_image={productBump.bump_image}
                             onBumpChange={onHandleProductBump}
+                            setProductBumpImage={setProductBumpImage}
                         />
                     </TabPanel>
                     <TabPanel value={value} index={3} dir={theme.direction}>
                         <BonusProduct
                             bonus_title={productBonus.title}
                             bonus_description={productBonus.description}
+                            bonus_image={productBonus.image}
                             onBonusChange={onHandleProductBonus}
+                            setProductBonusImage={setProductBonusImage}
                         />
                     </TabPanel>
                 </SwipeableViews>

@@ -3,15 +3,22 @@ import Select from 'react-select';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+
 import VideocamTwoToneIcon from '@material-ui/icons/VideocamTwoTone';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import AddTwoToneIcon from '@material-ui/icons/AddTwoTone';
 import RemoveTwoToneIcon from '@material-ui/icons/RemoveTwoTone';
 
-import { Divider, Typography, Container } from '@material-ui/core';
+import { Divider, Typography, Container, ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Editor } from '@tinymce/tinymce-react';
+
+import NProgress from 'nprogress';
+
+import api from '../../../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,10 +38,31 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 15,
         marginRight: 5
     },
+    images: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
+    title: {
+        color: theme.palette.primary.light,
+    },
+    titleBar: {
+        background:
+            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+    },
 }));
 
 const LayoutProduct = (props) => {
     const classes = useStyles();
+
+    const newImageUrls = [];
 
     const {
         headline,
@@ -44,6 +72,12 @@ const LayoutProduct = (props) => {
         sections,
         agents,
         valueAgent,
+
+        media_url,
+        setMediaUrl,
+
+        imageUrl,
+        setProductImageUrl,
 
         onChange,
         onEditorChange,
@@ -66,6 +100,65 @@ const LayoutProduct = (props) => {
     console.log('[LayoutProduct.form.subheadline]', subheadline);
     console.log('[LayoutProduct.form.description]', description);
     console.log('[LayoutProduct.form.agent]', valueAgent);
+
+    const onPostSingleImage = async (e) => {
+        NProgress.start();
+
+        const bodyForm = new FormData();
+        bodyForm.append('file', e.target.files[0]);
+        const res = await api.post('/uploads/products', bodyForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (res.data.result) {
+            NProgress.done();
+
+            newImageUrls.push(res.data.result.url);
+
+            setProductImageUrl(old => [...old, newImageUrls]);
+            console.log(imageUrl);
+        }
+    }
+
+    const onPostHeaderMedia = async (e) => {
+        NProgress.start();
+
+        const bodyForm = new FormData();
+        bodyForm.append('file', e.target.files[0]);
+        const res = await api.post('/uploads/products', bodyForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (res.data.result) {
+            NProgress.done();
+
+            setMediaUrl(res.data.result.url);
+            console.log(media_url);
+        }
+    }
+
+    const onPostSectionImage = async (e, i) => {
+        NProgress.start();
+
+        const bodyForm = new FormData();
+        bodyForm.append('file', e.target.files[0]);
+        const res = await api.post('/uploads/products', bodyForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (res.data.result) {
+            NProgress.done();
+
+            onHandleSectionChangeImage(i, res.data.result.url);
+            console.log(sections[i].image, i);
+        }
+    }
 
     return (
         <React.Fragment>
@@ -117,8 +210,8 @@ const LayoutProduct = (props) => {
                     accept="image/x-png,image/gif,image/jpeg"
                     className={classes.input}
                     id="contained-button-file-image"
-                    multiple
                     type="file"
+                    onChange={(e) => onPostSingleImage(e)}
                 />
                 <label htmlFor="contained-button-file-image">
                     <Button 
@@ -137,6 +230,7 @@ const LayoutProduct = (props) => {
                     className={classes.input}
                     id="contained-button-file-media"
                     type="file"
+                    onChange={(e) => onPostHeaderMedia(e)}
                 />
                 <label htmlFor="contained-button-file-media">
                     <Button 
@@ -151,6 +245,34 @@ const LayoutProduct = (props) => {
                     </Button>
                 </label>
             </form>
+            {imageUrl.length > 0 && (
+                <>
+                    <br />
+                    <Typography variant="subtitle2">Image(s)</Typography>
+                    <div className={classes.images}>
+                        <GridList className={classes.gridList} cols={2.5}>
+                            {imageUrl.map((tile, i) => {
+                                return (
+                                    <GridListTile key={i}>
+                                        <img src={tile} alt={tile} />
+                                    </GridListTile>
+                                )
+                            })}
+                        </GridList>
+                    </div>
+                </>
+            )}
+            {media_url && (
+                <>
+                    <br />
+                    <Typography variant="subtitle2">Header Media</Typography>
+                    <video width="50%" height="100%" controls>
+                        <source src={media_url} type="video/mp4" />
+                        <source src={media_url} type="video/ogg" />
+                        Your browser does not support the video tag.
+                    </video>
+                </>
+            )}
             <br />
             <br />
             <Divider />
@@ -217,8 +339,8 @@ const LayoutProduct = (props) => {
             <Typography variant="subtitle1" style={{ textAlign: 'center' }}><b>Section</b></Typography>
             <Button
                 size="small"
-                startIcon={<AddTwoToneIcon />}
                 color="secondary"
+                startIcon={<AddTwoToneIcon />}
                 style={{ marginBottom: '5px', float: 'right' }}
                 onClick={() => onHandleAddSection()}
             >
@@ -259,10 +381,12 @@ const LayoutProduct = (props) => {
                             <input
                                 accept="image/x-png,image/gif,image/jpeg"
                                 className={classes.input}
-                                id="contained-button-file-image"
+                                id={`contained-button-file-image-section-${i}`}
+                                name={`contained-button-file-image-section-${i}`}
                                 type="file"
+                                onChange={(e) => onPostSectionImage(e, i)} 
                             />
-                            <label htmlFor="contained-button-file-image">
+                            <label htmlFor={`contained-button-file-image-section-${i}`}>
                                 <Button 
                                     variant="contained" 
                                     color="default" 
@@ -274,7 +398,14 @@ const LayoutProduct = (props) => {
                                 >
                                     Image
                                 </Button>
-                            </label>                    
+                            </label>
+                            <div style={{ width: '125px' }}>
+                                <img
+                                    width="100%"
+                                    src={sections[i].image}
+                                    alt={sections[i].image}
+                                />
+                            </div>                    
                         </Container>
                     </>
                 )
