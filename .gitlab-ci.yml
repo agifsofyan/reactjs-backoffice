@@ -16,7 +16,7 @@ deploy:
         - deploying
     script:
         - docker container stop -f laruno-backoffice || true && docker container rm -f laruno-backoffice || true
-        - docker image rm laruno/laruno-backoffice
+        - docker image rm laruno/laruno-backoffice || true
         - echo "Building image.."
         - docker build -t laruno/laruno-backoffice .
     only:
