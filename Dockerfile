@@ -3,7 +3,8 @@ FROM node:14-alpine
 WORKDIR ./
 
 COPY package*.json ./
-COPY .env ./
+COPY .env.example ./
+ADD .env.example .env
 
 RUN npm install
 
