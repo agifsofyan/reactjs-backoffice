@@ -12,7 +12,7 @@ const INITIAL_STATE = {
     setLoading: true
 }
 
-const newProducts = []
+// const newProducts = [];
 
 export default function (state = INITIAL_STATE, action) {
     const { type, payload } = action;
@@ -20,16 +20,16 @@ export default function (state = INITIAL_STATE, action) {
     switch (type) {
         case GET_PRODUCTS:
             // merge count into product object
-            payload.map((item, i) => {
-                Object.assign(item.product, item.count);
-                delete item.count;
-            });
-            payload.map(item => {
-                newProducts.push(item.product);
-            });
+            // payload.map((item, i) => {
+            //     Object.assign(item.product, item.count);
+            //     delete item.count;
+            // });
+            // payload.map(item => {
+            //     newProducts.push(item.product);
+            // });
             return {
                 ...state,
-                products: newProducts,
+                products: payload,
                 setLoading: false
             }
         case GET_PRODUCTS_FAIL:

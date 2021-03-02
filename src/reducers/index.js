@@ -8,6 +8,8 @@ import admin from './admin';
 import coupon from './coupon';
 import payment from './payment';
 import agent from './agent';
+import image from './image';
+import order from './order';
 
 export default combineReducers({
     auth,
@@ -17,5 +19,7 @@ export default combineReducers({
     admin,
     coupon,
     payment,
-    agent
+    agent,
+    image,
+    order
 });

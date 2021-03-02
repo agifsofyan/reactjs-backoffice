@@ -1,22 +1,31 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import Select from 'react-select';
+
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import IconButton from '@material-ui/core/IconButton';
 
 import VideocamTwoToneIcon from '@material-ui/icons/VideocamTwoTone';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import AddTwoToneIcon from '@material-ui/icons/AddTwoTone';
+import AddPhotoAlternateTwoToneIcon from '@material-ui/icons/AddPhotoAlternateTwoTone';
+import HighlightOffTwoToneIcon from '@material-ui/icons/HighlightOffTwoTone';
 import RemoveTwoToneIcon from '@material-ui/icons/RemoveTwoTone';
 
-import { Divider, Typography, Container, ButtonGroup } from '@material-ui/core';
+import { Divider, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Editor } from '@tinymce/tinymce-react';
 
 import NProgress from 'nprogress';
+
+import { fetchImages } from '../../../../actions/image';
 
 import api from '../../../../utils/api';
 
@@ -51,15 +60,20 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translateZ(0)',
     },
     title: {
-        color: theme.palette.primary.light,
+        color: 'white',
     },
     titleBar: {
         background:
-            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+            'linear-gradient(to top, rgba(1,1,1,1) 3%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
     },
 }));
 
 const LayoutProduct = (props) => {
+    React.useEffect(() => {
+        fetchImages('sub_path', 'image_url');
+        // eslint-disable-next-line
+    },[]);
+
     const classes = useStyles();
 
     const newImageUrls = [];
@@ -71,6 +85,7 @@ const LayoutProduct = (props) => {
         learnAbout,
         sections,
         agents,
+        images,
         valueAgent,
 
         media_url,
@@ -93,7 +108,9 @@ const LayoutProduct = (props) => {
         onHandleRemoveSection,
         onHandleSectionChangeTitle,
         onHandleSectionChangeContent,
-        onHandleSectionChangeImage
+        onHandleSectionChangeImage,
+
+        fetchImages
     } = props;
 
     console.log('[LayoutProduct.form.headline]', headline);
@@ -106,7 +123,7 @@ const LayoutProduct = (props) => {
 
         const bodyForm = new FormData();
         bodyForm.append('file', e.target.files[0]);
-        const res = await api.post('/uploads/products', bodyForm, {
+        const res = await api.post('/uploads/products?sub_path=image_url', bodyForm, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -122,12 +139,17 @@ const LayoutProduct = (props) => {
         }
     }
 
+    const onClickGallery = async (url) => {
+        setProductImageUrl(old => [...old, url]);
+        console.log(imageUrl);
+    }
+
     const onPostHeaderMedia = async (e) => {
         NProgress.start();
 
         const bodyForm = new FormData();
         bodyForm.append('file', e.target.files[0]);
-        const res = await api.post('/uploads/products', bodyForm, {
+        const res = await api.post('/uploads/products?sub_path=media_url', bodyForm, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -146,7 +168,7 @@ const LayoutProduct = (props) => {
 
         const bodyForm = new FormData();
         bodyForm.append('file', e.target.files[0]);
-        const res = await api.post('/uploads/products', bodyForm, {
+        const res = await api.post('/uploads/products?sub_path=section', bodyForm, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -219,10 +241,10 @@ const LayoutProduct = (props) => {
                         color="default" 
                         component="span" 
                         className={classes.btnUploads}
-                        startIcon={<PhotoCamera />}
+                        startIcon={<AddPhotoAlternateTwoToneIcon />}
                         size="small"
                     >
-                        Image(s)
+                        Product Image(s)
                     </Button>
                 </label>
                 <input
@@ -248,13 +270,26 @@ const LayoutProduct = (props) => {
             {imageUrl.length > 0 && (
                 <>
                     <br />
-                    <Typography variant="subtitle2">Image(s)</Typography>
+                    <Typography variant="subtitle2">Product Image(s)</Typography>
                     <div className={classes.images}>
                         <GridList className={classes.gridList} cols={2.5}>
                             {imageUrl.map((tile, i) => {
                                 return (
                                     <GridListTile key={i}>
                                         <img src={tile} alt={tile} />
+                                        <GridListTileBar
+                                            classes={{
+                                                root: classes.titleBar,
+                                                title: classes.title,
+                                            }}
+                                            actionIcon={
+                                                <IconButton onClick={() => {
+                                                    setProductImageUrl(current => current.filter((img, idx) => idx !== i))
+                                                }} title='Delete from Product Image(s)'>
+                                                    <HighlightOffTwoToneIcon className={classes.title} />
+                                                </IconButton>
+                                            }
+                                        />
                                     </GridListTile>
                                 )
                             })}
@@ -271,6 +306,35 @@ const LayoutProduct = (props) => {
                         <source src={media_url} type="video/ogg" />
                         Your browser does not support the video tag.
                     </video>
+                </>
+            )}
+            {images && (
+                <>
+                    <br />
+                    <Typography variant="subtitle2">Gallery (total {images.length} files)</Typography>
+                    <div className={classes.images}>
+                        <GridList className={classes.gridList} cols={2.5}>
+                            {images.map((tile, i) => {
+                                return (
+                                    <GridListTile key={i}>
+                                        <img src={tile.url} alt={tile} />
+                                        <GridListTileBar
+                                            title={`${tile.path}/${tile.filename}`}
+                                            classes={{
+                                                root: classes.titleBar,
+                                                title: classes.title,
+                                            }}
+                                            actionIcon={
+                                                <IconButton onClick={() => onClickGallery(tile.url)} title='Delete from Product Image(s)'>
+                                                    <AddPhotoAlternateTwoToneIcon className={classes.title} />
+                                                </IconButton>
+                                            }
+                                        />
+                                    </GridListTile>
+                                )
+                            })}
+                        </GridList>
+                    </div>
                 </>
             )}
             <br />
@@ -392,11 +456,11 @@ const LayoutProduct = (props) => {
                                     color="default" 
                                     component="span" 
                                     className={classes.btnUploads}
-                                    startIcon={<PhotoCamera />}
+                                    startIcon={<AddPhotoAlternateTwoToneIcon />}
                                     size="small"
                                     style={{ marginBottom: '15px' }}
                                 >
-                                    Image
+                                    Section Image
                                 </Button>
                             </label>
                             <div style={{ width: '125px' }}>
@@ -414,4 +478,13 @@ const LayoutProduct = (props) => {
     )
 }
 
-export default LayoutProduct;
+LayoutProduct.propTypes = {
+    images: PropTypes.array,
+    fetchImages: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+    images: state.image.images,
+});
+
+export default connect(mapStateToProps, { fetchImages })(LayoutProduct);

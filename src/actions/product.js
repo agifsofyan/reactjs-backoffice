@@ -11,7 +11,7 @@ import api from '../utils/api';
 
 export const fetchProduct = () => async dispatch => {
     try {
-        const res = await api.get('/products/list/count');
+        const res = await api.get('/products');
         dispatch({ type: GET_PRODUCTS, payload: res.data.data });
     } catch (error) {
         console.log(`[product.fetchProduct] error: ${error}`);

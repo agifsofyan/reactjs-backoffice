@@ -79,10 +79,7 @@ const DetailProduct = (props) => {
         charge_checked,
         sale_price,
 
-        onHandleProductEcommerce,
-
-        imageUrl,
-        setProductImageUrl
+        onHandleProductEcommerce
     } = props;
 
     console.log('[DetailProduct.form.name]', name);

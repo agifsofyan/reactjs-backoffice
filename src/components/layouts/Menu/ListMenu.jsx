@@ -58,7 +58,7 @@ const ListMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary="Products" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/orders">
                 <ListItemIcon>
                     <ShoppingCartTwoToneIcon />
                 </ListItemIcon>

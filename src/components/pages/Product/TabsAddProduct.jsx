@@ -66,7 +66,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
+const TabsAddProduct = ({ 
+    topics, 
+    agents, 
+    fetchTopic, 
+    fetchAgent
+}) => {
     React.useEffect(() => {
         fetchTopic();
         fetchAgent();
@@ -86,7 +91,7 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
         ecommerce: '',
         topic: [],
         price: 0,
-        time_period: '',
+        time_period: 0,
         visibility: '',
         sale_method: '',
         bump: '',
@@ -365,6 +370,26 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
         setValue(index);
     }
 
+    const onSave = () => {
+        form.type = productType ? productType.value : '';
+        if (form.type !== 'ecommerce') {
+            delete form.ecommerce;
+        }
+
+        form.visibility = productVisibility ? productVisibility.value : '';
+        form.sale_method = productSaleMethod ? productSaleMethod.value : '';
+        
+        console.log(form);
+        
+        for (let key in form) {
+            if (form[key] === '' || (form[key] instanceof Array && form[key].length === 0)) {
+                delete form[key];
+            }
+        }
+
+        console.log('onSave', form);
+    }
+
     return (
         <React.Fragment>
             <h3>Add Product</h3>
@@ -382,6 +407,7 @@ const TabsAddProduct = ({ topics, agents, fetchTopic, fetchAgent }) => {
                 startIcon={<SaveAltTwoToneIcon />}
                 color="primary"
                 style={{ marginBottom: '5px', float: 'right' }}
+                onClick={() => onSave()}
             >
                 Save
             </Button>
@@ -491,7 +517,7 @@ TabsAddProduct.propTypes = {
     topics: PropTypes.array,
     agents: PropTypes.array,
     fetchTopic: PropTypes.func.isRequired,
-    fetchAgent: PropTypes.func.isRequired
+    fetchAgent: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({

@@ -13,6 +13,8 @@ import Dashboard from '../components/pages/Dashboard';
 import Products from '../components/pages/Product/Products';
 import TabsAddProduct from '../components/pages/Product/TabsAddProduct';
 
+import Orders from '../components/pages/Order/Orders';
+
 import Topics from '../components/pages/Topic/Topics';
 import Roles from '../components/pages/Role/Roles';
 import Admins from '../components/pages/Admin/Admins';
@@ -60,8 +62,11 @@ const Routes = () => {
                     <div className={classes.appBarSpacer} />
                     <Container maxWidth="lg" className={classes.container}>
                         <PrivateRoute exact path="/dashboard" component={Dashboard} />
+
                         <PrivateRoute exact path="/products" component={Products} />
                         <PrivateRoute exact path="/product/add" component={TabsAddProduct} />
+
+                        <PrivateRoute exact path="/orders" component={Orders} />
 
                         <PrivateRoute exact path="/topics" component={Topics} />
                         <PrivateRoute exact path="/roles" component={Roles} />

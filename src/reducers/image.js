@@ -1,35 +1,25 @@
 import {
-    GET_ROLES,
-    GET_ROLES_FAIL
+    GET_IMAGES,
+    GET_IMAGES_FAIL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    roles: null,
+    images: null,
     error: null,
     setLoading: true
 }
-
-const newRoles = [];
 
 export default function (state = INITIAL_STATE, action) {
     const { type, payload } = action;
 
     switch (type) {
-        case GET_ROLES:
-            // merge count into topic object
-            payload.map((item, i) => {
-                Object.assign(item.role, item.count);
-                delete item.count;
-            });
-            payload.map(item => {
-                newRoles.push(item.role)
-            });
+        case GET_IMAGES:
             return {
                 ...state,
-                roles: newRoles,
+                images: payload,
                 setLoading: false
             }
-        case GET_ROLES_FAIL:
+        case GET_IMAGES_FAIL:
             return {
                 ...state,
                 error: payload,

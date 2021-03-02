@@ -58,4 +58,10 @@ export const DELETE_PAYMENT_MANY_FAIL = 'DELETE_PAYMENT_MANY_FAIL';
 export const GET_AGENTS = 'GET_AGENTS';
 export const GET_AGENTS_FAIL = 'GET_AGENTS_FAIL';
 
+export const GET_IMAGES = 'GET_IMAGES';
+export const GET_IMAGES_FAIL = 'GET_IMAGES_FAIL';
+
+export const GET_ORDERS = 'GET_ORDERS';
+export const GET_ORDERS_FAIL = 'GET_ORDERS_FAIL';
+
 export const LOGOUT = 'LOGOUT';

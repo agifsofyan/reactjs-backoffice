@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import NumberFormat from 'react-number-format';
@@ -8,17 +7,11 @@ import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 // import Chip from '@material-ui/core/Chip';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 // import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
 // import LocalOfferTwoToneIcon from '@material-ui/icons/LocalOfferTwoTone';
 // import InsertDriveFileTwoToneIcon from '@material-ui/icons/InsertDriveFileTwoTone';
-
-import { Divider } from '@material-ui/core';
 
 import MUIDataTable from 'mui-datatables';
 import Swal from 'sweetalert2';
@@ -39,15 +32,6 @@ const Products = ({
         fetchProduct();
         // eslint-disable-next-line
     },[]);
-
-    const [responsive, setResponsive] = React.useState('vertical');
-    const [tableBodyHeight, setTableBodyHeight] = React.useState('100%');
-    const [tableBodyMaxHeight, setTableBodyMaxHeight] = React.useState('400px');
-    const [searchBtn, setSearchBtn] = React.useState(true);
-    const [downloadBtn, setDownloadBtn] = React.useState(true);
-    const [printBtn, setPrintBtn] = React.useState(true);
-    const [viewColumnBtn, setViewColumnBtn] = React.useState(true);
-    const [filterBtn, setFilterBtn] = React.useState(true);
 
     const columns = [
         {
@@ -195,15 +179,15 @@ const Products = ({
     ];
 
     const options = {
-        search: searchBtn,
-        download: downloadBtn,
-        print: printBtn,
-        viewColumns: viewColumnBtn,
-        filter: filterBtn,
+        search: true,
+        download: true,
+        print: 'disabled',
+        viewColumns: true,
+        filter: true,
         filterType: 'dropdown',
-        responsive,
-        tableBodyHeight,
-        tableBodyMaxHeight,
+        responsive: 'vertical',
+        tableBodyHeight: '100%',
+        tableBodyMaxHeight: '400px',
         sortOrder: {
             name: 'created_at',
             direction: 'desc'
@@ -233,117 +217,6 @@ const Products = ({
     return (
         <React.Fragment>
             <SnackbarInfo info="success" message={delete_product_many && delete_product_many.message} />
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Responsive Option</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={responsive}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setResponsive(e.target.value)}>
-                    <MenuItem value={'vertical'}>vertical</MenuItem>
-                    <MenuItem value={'standard'}>standard</MenuItem>
-                    <MenuItem value={'simple'}>simple</MenuItem>
-
-                    <MenuItem value={'scroll'}>scroll (deprecated)</MenuItem>
-                    <MenuItem value={'scrollMaxHeight'}>scrollMaxHeight (deprecated)</MenuItem>
-                    <MenuItem value={'stacked'}>stacked (deprecated)</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Table Body Height</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={tableBodyHeight}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setTableBodyHeight(e.target.value)}>
-                    <MenuItem value={''}>[blank]</MenuItem>
-                    <MenuItem value={'400px'}>400px</MenuItem>
-                    <MenuItem value={'800px'}>800px</MenuItem>
-                    <MenuItem value={'100%'}>100%</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Max Table Body Height</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={tableBodyMaxHeight}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setTableBodyMaxHeight(e.target.value)}>
-                    <MenuItem value={''}>[blank]</MenuItem>
-                    <MenuItem value={'400px'}>400px</MenuItem>
-                    <MenuItem value={'800px'}>800px</MenuItem>
-                    <MenuItem value={'100%'}>100%</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Search Button</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={searchBtn}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setSearchBtn(e.target.value)}>
-                    <MenuItem value={'true'}>{'true'}</MenuItem>
-                    <MenuItem value={'false'}>{'false'}</MenuItem>
-                    <MenuItem value={'disabled'}>disabled</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Download Button</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={downloadBtn}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setDownloadBtn(e.target.value)}>
-                    <MenuItem value={'true'}>{'true'}</MenuItem>
-                    <MenuItem value={'false'}>{'false'}</MenuItem>
-                    <MenuItem value={'disabled'}>disabled</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Print Button</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={printBtn}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setPrintBtn(e.target.value)}>
-                    <MenuItem value={'true'}>{'true'}</MenuItem>
-                    <MenuItem value={'false'}>{'false'}</MenuItem>
-                    <MenuItem value={'disabled'}>disabled</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">View Column Button</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={viewColumnBtn}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setViewColumnBtn(e.target.value)}>
-                    <MenuItem value={'true'}>{'true'}</MenuItem>
-                    <MenuItem value={'false'}>{'false'}</MenuItem>
-                    <MenuItem value={'disabled'}>disabled</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel id="demo-simple-select-label">Filter Button</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={filterBtn}
-                    style={{ width: '130px', marginBottom: '10px', marginRight: 10 }}
-                    onChange={e => setFilterBtn(e.target.value)}>
-                    <MenuItem value={'true'}>{'true'}</MenuItem>
-                    <MenuItem value={'false'}>{'false'}</MenuItem>
-                    <MenuItem value={'disabled'}>disabled</MenuItem>
-                </Select>
-            </FormControl>
-            <Divider hidden />
             {setLoading ? <Spinner /> : (
                 <MUIDataTable 
                     title={<div>

@@ -1,73 +1,235 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import Link from '@material-ui/core/Link';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import SmartphoneTwoToneIcon from '@material-ui/icons/SmartphoneTwoTone';
+import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
 
-import Title from '../Title';
+import NumberFormat from 'react-number-format';
+import Moment from 'react-moment';
 
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
-}
-  
-const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
-  
-function preventDefault(event) {
-    event.preventDefault();
-}
+import MUIDataTable from 'mui-datatables';
 
-const useStyles = makeStyles((theme) => ({
-    seeMore: {
-      marginTop: theme.spacing(3),
-    },
-}));
+import { fetchOrder } from '../../../actions/order';
 
-const Orders = () => {
-    const classes = useStyles();
+import Spinner from '../../layouts/Spinner';
+
+const Orders = ({ orders, setLoading, fetchOrder }) => {
+    React.useEffect(() => {
+        fetchOrder();
+        // eslint-disable-next-line
+    }, []);
+
+    const columns = [
+        {
+            name: '_id',
+            options: {
+                display: false,
+                filter: false,
+                sort: false
+            }
+        },
+        { 
+            label: 'Invoice',
+            name: 'invoice', 
+            options: { 
+                filterOptions: { 
+                    fullWidth: true 
+                }
+            } 
+        },
+        {
+            label: 'Products',
+            name: 'items',
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: v => {
+                    return <span>{v && v.length}</span>
+                },
+            }
+        },
+        {
+            label: 'Buyer',
+            name: 'user_info',
+            options: {
+                filter: false,
+                // filterOptions: {
+                //     renderValue: v => {
+                //         return <span>{v && v.name}</span>
+                //     }
+                // },
+                sort: false,
+                customBodyRender: value => {
+                    return (
+                        <>
+                            <Chip
+                                icon={<PersonOutlineTwoToneIcon />}
+                                label={`${value && value.name}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            <br />
+                            <Chip
+                                icon={<SmartphoneTwoToneIcon />}
+                                label={`${value && value.phone_number}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                        </>
+                    )
+                }
+            }
+        },
+        {
+            label: 'Date',
+            name: 'create_date',
+            options: {
+                filter: true,
+                filterOptions: {
+                    renderValue: v => {
+                        return <Moment format="llll">{v}</Moment>
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <Moment format="llll">{value}</Moment>
+                }
+            }
+        },
+        {
+            label: 'Qty',
+            name: 'total_qty',
+            options: {
+                filter: true,
+                sort: true
+            }
+        },
+        {
+            label: 'Subtotal',
+            name: 'sub_total_price',
+            options: {
+                filter: false,
+                filterOptions: {
+                    renderValue: v => {
+                        return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                }
+            }
+        },
+        {
+            label: 'Total',
+            name: 'total_price',
+            options: {
+                filter: false,
+                filterOptions: {
+                    renderValue: v => {
+                        return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                }
+            }
+        },
+        {
+            label: 'Unique',
+            name: 'unique_number',
+            options: {
+                filter: true,
+                sort: true
+            }
+        },
+        {
+            label: 'Discount',
+            name: 'dicount_value',
+            options: {
+                filter: false,
+                filterOptions: {
+                    renderValue: v => {
+                        return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                    }
+                },
+                sort: true,
+                customBodyRender: value => {
+                    return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                }
+            }
+        },
+        {
+            label: 'Payment Status',
+            name: 'status',
+            options: {
+                filter: true,
+                sort: true,
+                customBodyRender: value => {
+                    return (
+                        <>
+                            <Chip
+                                label={value} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                        </>
+                    )
+                }
+            }
+        }
+    ];
+
+    const options = {
+        search: true,
+        download: true,
+        print: 'disabled',
+        viewColumns: true,
+        filter: true,
+        filterType: 'dropdown',
+        responsive: 'vertical',
+        tableBodyHeight: '100%',
+        tableBodyMaxHeight: '400px',
+        sortOrder: {
+            name: 'create_date',
+            direction: 'desc'
+        },
+        // onTableChange: (action, state) => {
+        //     console.log(action);
+        //     console.dir(state);
+        // },
+    }
 
     return (
         <React.Fragment>
-            <Title>Recent Orders</Title>
-            <Table size="small">
-                <TableHead>
-                <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Ship To</TableCell>
-                    <TableCell>Payment Method</TableCell>
-                    <TableCell align="right">Sale Amount</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {rows.map((row) => (
-                    <TableRow key={row.id}>
-                    <TableCell>{row.date}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.shipTo}</TableCell>
-                    <TableCell>{row.paymentMethod}</TableCell>
-                    <TableCell align="right">{row.amount}</TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-            <div className={classes.seeMore}>
-                <Link color="primary" href="#" onClick={preventDefault}>
-                    See more orders
-                </Link>
-            </div>
+            {setLoading ? <Spinner /> : (
+                <MUIDataTable 
+                    title={<div>
+                        <h2>Order List</h2>
+                    </div>} 
+                    data={orders} 
+                    columns={columns} 
+                    options={options} 
+                />
+            )}
         </React.Fragment>
     )
 }
 
-export default Orders;
+Orders.propTypes = {
+    fetchOrder: PropTypes.func.isRequired,
+    orders: PropTypes.array,
+    setLoading: PropTypes.bool.isRequired
+}
+
+const mapStateToProps = state => ({
+    orders: state.order.orders,
+    setLoading: state.order.setLoading
+});
+
+export default connect(mapStateToProps, { fetchOrder })(Orders);
+
