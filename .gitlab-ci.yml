@@ -1,0 +1,35 @@
+image: node:14-alpine
+
+services:
+    - docker:dind
+
+stages:
+    - deploy
+    - publish
+
+before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+deploy:
+    stage: deploy
+    tags:
+        - deploying
+    script:
+        - docker container stop -f laruno-backoffice || true && docker container rm -f laruno-backoffice || true
+        - docker image rm laruno/laruno-backoffice
+        - echo "Building image.."
+        - docker build -t laruno/laruno-backoffice .
+    only:
+        - master
+
+publish:
+    stage: publish
+    tags:
+        - publishing
+    script:
+        #- docker container stop -f laruno-backoffice || true && docker container rm -f laruno-backoffice || true
+        - docker run --name laruno-backoffice -p 7000:7000 -d laruno/laruno-backoffice
+        - docker container prune -f
+        - docker image prune -f
+    only:
+        - master
