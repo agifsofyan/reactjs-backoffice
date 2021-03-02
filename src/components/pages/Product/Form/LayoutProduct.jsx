@@ -325,7 +325,7 @@ const LayoutProduct = (props) => {
                                                 title: classes.title,
                                             }}
                                             actionIcon={
-                                                <IconButton onClick={() => onClickGallery(tile.url)} title='Delete from Product Image(s)'>
+                                                <IconButton onClick={() => onClickGallery(tile.url)} title='Add to Product Image(s)'>
                                                     <AddPhotoAlternateTwoToneIcon className={classes.title} />
                                                 </IconButton>
                                             }
