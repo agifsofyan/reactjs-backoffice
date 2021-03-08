@@ -19,7 +19,7 @@ const GetProduct = ({ product, setLoading, fetchProduct }) => {
 
     return (
         <React.Fragment>
-            {product === null || product._id !== id && setLoading ? <Spinner /> : (
+            {product === null || product._id !== id ? <Spinner /> : (
                 <UpdateProduct
                     id={id}
                     name={product.name}
