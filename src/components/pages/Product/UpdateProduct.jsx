@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import SwipeableViews from 'react-swipeable-views';
@@ -18,6 +18,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { fetchTopic } from '../../../actions/topic';
 import { fetchAgent } from '../../../actions/agent';
+import { updateProduct } from '../../../actions/product';
+
+import Swal from 'sweetalert2';
 
 import DetailProduct from './Form/DetailProduct';
 import BumpProduct from './Form/BumpProduct';
@@ -66,12 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TabsAddProduct = ({ 
-    topics, 
-    agents, 
-    fetchTopic, 
-    fetchAgent
-}) => {
+const UpdateProduct = (props) => {
     React.useEffect(() => {
         fetchTopic();
         fetchAgent();
@@ -79,39 +77,78 @@ const TabsAddProduct = ({
     },[]);
 
     const classes = useStyles();
+    const history = useHistory();
+
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom',
+        showCloseButton: true,
+        showConfirmButton: false
+    });
+
+    const {
+        topics, 
+        agents,
+        product,
+        fetchTopic, 
+        fetchAgent,
+        updateProduct,
+
+        id,
+        name,
+        slug,
+        type,
+        ecommerce,
+        topic,
+        price,
+        time_period,
+        visibility,
+        sale_method,
+        bump,
+        headline,
+        subheadline,
+        description,
+        learn_about,
+        sale_price,
+        image_url,
+        bonus,
+        agent,
+        media_url,
+        section,
+        feature
+    } = props;
+
     // Form Product
     const [form, setForm] = React.useState({
-        name: '',
-        slug: '',
+        name: name,
+        slug: slug,
         type: '',
-        boe: '',
         ecommerce: '',
         topic: [],
-        price: 0,
-        time_period: 0,
+        price: price,
+        time_period: time_period,
         visibility: '',
         sale_method: '',
         bump: '',
         // point_gamification: 0,
-        
-        headline: '',
-        subheadline: '',
-        description: '',
+        headline: headline,
+        subheadline: subheadline,
+        description: description,
         learn_about: '',
-        sale_price: 0,
+        sale_price: sale_price,
         image_url: [],
         bonus: '',
         agent: [],
-        media_url: '',
+        media_url: media_url,
         section: '',
         feature: ''
     });
 
     // Learn About
-    const [productLearnAbout, setProductLearnAbout] = React.useState([
+    const [productLearnAbout, setProductLearnAbout] = React.useState(learn_about || [
         { title: '', content: '', note: '' }
     ]);
 
@@ -148,7 +185,7 @@ const TabsAddProduct = ({
     form.learn_about = [...productLearnAbout];
 
     // Section
-    const [productSection, setProductSection] = React.useState([
+    const [productSection, setProductSection] = React.useState(section || [
         { title: '', content: '', image: '' }
     ]);
 
@@ -186,87 +223,87 @@ const TabsAddProduct = ({
 
     // Bump
     const [productBump, setProductBump] = React.useState({
-        bump_name: '',
-        bump_price: 0,
-        bump_image: '',
-        bump_weight: '',
-        bump_heading: '',
-        bump_desc: ''
+        bump_name: bump.bump_name || '',
+        bump_price: bump.bump_price || '',
+        bump_image: bump.bump_image || '',
+        bump_weight: bump.bump_weight || '',
+        bump_heading: bump.bump_heading || '',
+        bump_desc: bump.bump_desc || ''
     });
 
     // Ecommerce
     const [productEcommerce, setProductEcommerce] = React.useState({
-        weight: 0,
-        shipping_charges: true,
-        stock: 0
+        weight: ecommerce.weight || 0,
+        shipping_charges: ecommerce.shipping_charges || true,
+        stock: ecommerce.stock || 0
     }); 
 
     // Bonus
     const [productBonus, setProductBonus] = React.useState({
-        image: '',
-        title: '',
-        description: ''
+        image: bonus === null ? '' : bonus.image,
+        title: bonus === null ? '' : bonus.title,
+        description: bonus === null ? '' : bonus.description,
     });
 
     // Feature
     const [productFeature, setProductFeature] = React.useState({
-        feature_onheader: '',
+        feature_onheader: feature.feature_onheader || '',
         // feature_onpage: ''
-        active_header: false,
-        active_page: false
+        active_header: feature.active_header || false,
+        active_page: feature.active_page || false
     });
 
     // Topic & Agent
-    const [productTopic, setProductTopic] = React.useState([]);
-    const [productAgent, setProductAgent] = React.useState([]);
+    const [productTopic, setProductTopic] = React.useState(topic || []);
+    const [productAgent, setProductAgent] = React.useState(agent || []);
 
     // Product Type
-    const [productType, setProductType] = React.useState(null);
+    const [productType, setProductType] = React.useState(type || null);
 
     // Product Visibility
-    const [productVisibility, setProductVisibility] = React.useState(null);
+    const [productVisibility, setProductVisibility] = React.useState(visibility || null);
 
     // Product Sale Method
-    const [productSaleMethod, setProductSaleMethod] = React.useState(null);
+    const [productSaleMethod, setProductSaleMethod] = React.useState(sale_method || null);
 
     // ToDo: Description
 
     // Array of image_url
-    const [productImageUrl, setProductImageUrl] = React.useState([]);
+    const [productImageUrl, setProductImageUrl] = React.useState(image_url || []);
 
     const onHandleProductBump = e => {
         setProductBump({ ...productBump, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleProductBump]', productBump);
+        console.log('[UpdateProduct.onHandleProductBump]', productBump);
     }
 
     const setProductBumpImage = url => {
         setProductBump({ ...productBump, bump_image: url });
-        console.log('[TabsAddProduct.setProductBumpImage]', productBump.bump_image);
+        console.log('[UpdateProduct.setProductBumpImage]', productBump.bump_image);
     }
 
     const onHandleProductEcommerce = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleProductEcommerce]', productEcommerce);
+        console.log('[UpdateProduct.onHandleProductEcommerce]', productEcommerce);
     }
 
     const onHandleProductBonus = e => {
         setProductBonus({ ...productBonus, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleProductBonus]', productBonus);
+        console.log('[UpdateProduct.onHandleProductBonus]', productBonus);
     }
 
     const setProductBonusImage = url => {
         setProductBonus({ ...productBonus, image: url });
-        console.log('[TabsAddProduct.setProductBonusImage]', productBonus.image);
+        console.log('[UpdateProduct.setProductBonusImage]', productBonus.image);
     }
 
     const onHandleProductFeature = e => {
         setProductFeature({ ...productFeature, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleProductFeature]', productFeature);
+        console.log('[UpdateProduct.onHandleProductFeature]', productFeature);
     }
 
     const onHandleProductShipping = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.checked });
-        console.log('[TabsAddProduct.onHandleProductShipping]', productEcommerce);
+        console.log('[UpdateProduct.onHandleProductShipping]', productEcommerce);
     }
 
     const onProductTopicChange = value => {
@@ -283,10 +320,10 @@ const TabsAddProduct = ({
         form.topic = topicIds;
 
         setProductTopic(value);
-        console.log('[TabsAddProduct.onProductTopicChange]', productTopic);
-        console.log('[TabsAddProduct.onProductTopicChange]', topics);
-        console.log('[TabsAddProduct.onProductTopicChange]', topicIds);
-        console.log('[TabsAddProduct.onProductTopicChange', form.topic);
+        console.log('[UpdateProduct.onProductTopicChange]', productTopic);
+        console.log('[UpdateProduct.onProductTopicChange]', topics);
+        console.log('[UpdateProduct.onProductTopicChange]', topicIds);
+        console.log('[UpdateProduct.onProductTopicChange', form.topic);
     }
 
     const onProductAgentChange = value => {
@@ -303,10 +340,10 @@ const TabsAddProduct = ({
         form.agent = agentIds;
 
         setProductAgent(value);
-        console.log('[TabsAddProduct.onProductAgentChange]', productAgent);
-        console.log('[TabsAddProduct.onProductAgentChange]', agents);
-        console.log('[TabsAddProduct.onProductAgentChange]', agentIds);
-        console.log('[TabsAddProduct.onProductAgentChange]', form.agent);
+        console.log('[UpdateProduct.onProductAgentChange]', productAgent);
+        console.log('[UpdateProduct.onProductAgentChange]', agents);
+        console.log('[UpdateProduct.onProductAgentChange]', agentIds);
+        console.log('[UpdateProduct.onProductAgentChange]', form.agent);
     }
 
     const onProductTypeChange = value => {
@@ -315,7 +352,7 @@ const TabsAddProduct = ({
         } else {
             setProductType(null);
         }
-        console.log('[TabsAddProduct.onProductTypeChange]', productType);
+        console.log('[UpdateProduct.onProductTypeChange]', productType);
     }
 
     const onProductVisibilityChange = value => {
@@ -324,7 +361,7 @@ const TabsAddProduct = ({
         } else {
             setProductVisibility(null);
         }
-        console.log('[TabsAddProduct.onProductVisibilityChange]', productVisibility);
+        console.log('[UpdateProduct.onProductVisibilityChange]', productVisibility);
     }
 
     const onProductSaleMethodChange = value => {
@@ -333,12 +370,12 @@ const TabsAddProduct = ({
         } else {
             setProductSaleMethod(null);
         }
-        console.log('[TabsAddProduct.onProductSaleMethodChange]', productSaleMethod);
+        console.log('[UpdateProduct.onProductSaleMethodChange]', productSaleMethod);
     }
 
     const onHandleChangeForm = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        console.log('[TabsAddProduct.onHandleChangeForm]', form);
+        console.log('[UpdateProduct.onHandleChangeForm]', form);
     }
 
     const onHandleEditorChange = content => {
@@ -349,9 +386,6 @@ const TabsAddProduct = ({
         setForm({ ...form, media_url: url });
     }
 
-    form.type = productType;
-    form.visibility = productVisibility;
-    form.sale_method = productSaleMethod;
     form.image_url = productImageUrl;
 
     form.bump = [{ ...productBump }];
@@ -370,29 +404,35 @@ const TabsAddProduct = ({
         setValue(index);
     }
 
-    const onSave = () => {
+    const onUpdate = () => {
         form.type = productType ? productType.value : '';
-        if (form.type !== 'ecommerce') {
-            delete form.ecommerce;
-        }
-
         form.visibility = productVisibility ? productVisibility.value : '';
         form.sale_method = productSaleMethod ? productSaleMethod.value : '';
-        
-        console.log(form);
-        
-        for (let key in form) {
-            if (form[key] === '' || (form[key] instanceof Array && form[key].length === 0)) {
-                delete form[key];
+
+        if (form.slug === '') {
+            delete form.slug;
+        }
+
+        const newForm = {...form}
+
+        for (let key in newForm) {
+            if (newForm[key] instanceof Array && newForm[key].length === 0) {
+                delete newForm[key];
             }
         }
 
-        console.log('onSave', form);
+        // if (form.type !== 'ecommerce') {
+        //     delete newForm.ecommerce;
+        // }
+
+        console.log('onUpdate', newForm);
+
+        updateProduct(id, newForm, history);
     }
 
     return (
         <React.Fragment>
-            <h3>Add Product</h3>
+            <h3>Edit Product</h3>
             <Button
                 size="small"
                 startIcon={<KeyboardBackspaceTwoToneIcon />}
@@ -407,9 +447,9 @@ const TabsAddProduct = ({
                 startIcon={<SaveAltTwoToneIcon />}
                 color="primary"
                 style={{ marginBottom: '5px', float: 'right' }}
-                onClick={() => onSave()}
+                onClick={() => onUpdate()}
             >
-                Save
+                Update
             </Button>
             <div className={classes.root}>
                 <Paper>
@@ -442,13 +482,13 @@ const TabsAddProduct = ({
                             onProductTypeChange={onProductTypeChange}
                             onProductVisibilityChange={onProductVisibilityChange}
                             onProductSaleMethodChange={onProductSaleMethodChange}
-                            type={form.type}
+                            type={productType}
                             slug={form.slug}
                             name={form.name}
                             price={form.price}
                             time_period={form.time_period}
-                            visibility={form.visibility}
-                            sale_method={form.sale_method}
+                            visibility={productVisibility}
+                            sale_method={productSaleMethod}
                             sale_price={form.sale_price}
                             // point_gamification={form.point_gamification}
                             stock={productEcommerce.stock}
@@ -513,16 +553,19 @@ const TabsAddProduct = ({
     )
 }
 
-TabsAddProduct.propTypes = {
+UpdateProduct.propTypes = {
     topics: PropTypes.array,
     agents: PropTypes.array,
+    product: PropTypes.object,
     fetchTopic: PropTypes.func.isRequired,
     fetchAgent: PropTypes.func.isRequired,
+    updateProduct: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     topics: state.topic.topics,
-    agents: state.agent.agents
+    agents: state.agent.agents,
+    product: state.product.product
 });
 
-export default connect(mapStateToProps, { fetchTopic, fetchAgent })(TabsAddProduct);
+export default connect(mapStateToProps, { fetchTopic, fetchAgent, updateProduct })(UpdateProduct);

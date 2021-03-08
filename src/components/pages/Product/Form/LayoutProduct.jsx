@@ -205,6 +205,7 @@ const LayoutProduct = (props) => {
                     className={classes.select}
                     placeholder="Select Agent"
                     options={agents}
+                    defaultValue={valueAgent}
                     value={valueAgent}
                     getOptionValue={(option) => option._id}
                     getOptionLabel={(option) => option.name}

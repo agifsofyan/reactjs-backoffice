@@ -1,12 +1,19 @@
 import {
     GET_PRODUCTS,
     GET_PRODUCTS_FAIL,
+    GET_PRODUCT_DETAIL,
+    GET_PRODUCT_DETAIL_FAIL,
+    ADD_PRODUCT,
+    ADD_PRODUCT_FAIL,
+    UPDATE_PRODUCT,
+    UPDATE_PRODUCT_FAIL,
     DELETE_PRODUCT_MANY,
     DELETE_PRODUCT_MANY_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
     products: null,
+    product: null,
     delete_product_many: null,
     error: null,
     setLoading: true
@@ -38,6 +45,18 @@ export default function (state = INITIAL_STATE, action) {
                 error: payload,
                 setLoading: false
             }
+        case GET_PRODUCT_DETAIL:
+            return {
+                ...state,
+                product: payload,
+                setLoading: false
+            }
+        case GET_PRODUCT_DETAIL_FAIL:
+            return {
+                ...state,
+                error: payload,
+                setLoading: false
+            }
         case DELETE_PRODUCT_MANY:
             return {
                 ...state,
@@ -45,6 +64,30 @@ export default function (state = INITIAL_STATE, action) {
                 setLoading: false
             }
         case DELETE_PRODUCT_MANY_FAIL:
+            return {
+                ...state,
+                error: payload,
+                setLoading: false
+            }
+        case ADD_PRODUCT:
+            return {
+                ...state,
+                product: payload,
+                setLoading: false
+            }
+        case ADD_PRODUCT_FAIL:
+            return {
+                ...state,
+                error: payload,
+                setLoading: false
+            }
+        case UPDATE_PRODUCT:
+            return {
+                ...state,
+                product: payload,
+                setLoading: false
+            }
+        case UPDATE_PRODUCT_FAIL:
             return {
                 ...state,
                 error: payload,

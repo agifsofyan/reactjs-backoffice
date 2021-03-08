@@ -11,7 +11,8 @@ import Navbar from '../components/layouts/Navbar/Navbar';
 import Dashboard from '../components/pages/Dashboard';
 
 import Products from '../components/pages/Product/Products';
-import TabsAddProduct from '../components/pages/Product/TabsAddProduct';
+import AddProduct from '../components/pages/Product/AddProduct';
+import GetProduct from '../components/pages/Product/GetProduct';
 
 import Orders from '../components/pages/Order/Orders';
 
@@ -64,7 +65,8 @@ const Routes = () => {
                         <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
                         <PrivateRoute exact path="/products" component={Products} />
-                        <PrivateRoute exact path="/product/add" component={TabsAddProduct} />
+                        <PrivateRoute exact path="/product/add" component={AddProduct} />
+                        <PrivateRoute exact path="/product/:id/edit" component={GetProduct} />
 
                         <PrivateRoute exact path="/orders" component={Orders} />
 

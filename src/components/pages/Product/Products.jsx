@@ -7,6 +7,7 @@ import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 // import Chip from '@material-ui/core/Chip';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 // import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
@@ -16,7 +17,7 @@ import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import MUIDataTable from 'mui-datatables';
 import Swal from 'sweetalert2';
 
-import { fetchProduct, deleteManyProduct } from '../../../actions/product';
+import { fetchProducts, deleteManyProduct } from '../../../actions/product';
 
 import Spinner from '../../layouts/Spinner';
 import SnackbarInfo from '../../layouts/SnackbarInfo';
@@ -25,11 +26,11 @@ const Products = ({
     products, 
     delete_product_many, 
     setLoading, 
-    fetchProduct, 
+    fetchProducts, 
     deleteManyProduct
 }) => {
     React.useEffect(() => {
-        fetchProduct();
+        fetchProducts();
         // eslint-disable-next-line
     },[]);
 
@@ -175,6 +176,24 @@ const Products = ({
                     return <Moment format="llll">{value}</Moment>
                 }
             }
+        },
+        {
+            name: 'Action',
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            <ButtonGroup size="small" aria-label="small outlined button group">
+                                {/* <Button onClick={() => console.log(tableMeta.rowData[0])}>Detail</Button> */}
+                                <Button component={Link} to={`/product/${tableMeta.rowData[0]}/edit`}>Edit</Button>
+                            </ButtonGroup>
+                        </>
+                    )
+                }
+            }
         }
     ];
 
@@ -243,7 +262,7 @@ const Products = ({
 }
 
 Products.propTypes = {
-    fetchProduct: PropTypes.func.isRequired,
+    fetchProducts: PropTypes.func.isRequired,
     deleteManyProduct: PropTypes.func.isRequired,
     products: PropTypes.array,
     delete_product_many: PropTypes.object,
@@ -256,4 +275,4 @@ const mapStateToProps = state => ({
     setLoading: state.product.setLoading
 });
 
-export default connect(mapStateToProps, { fetchProduct, deleteManyProduct })(Products);
+export default connect(mapStateToProps, { fetchProducts, deleteManyProduct })(Products);

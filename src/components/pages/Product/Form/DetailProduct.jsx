@@ -164,6 +164,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Product Type"
+                defaultInputValue={type}
                 value={type}
                 options={productTypes}
                 onChange={onProductTypeChange}
@@ -204,6 +205,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Visibility"
+                defaultInputValue={visibility}
                 value={visibility}
                 options={productVisibilities}
                 onChange={onProductVisibilityChange}
@@ -212,6 +214,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Sale Method"
+                defaultInputValue={sale_method}
                 value={sale_method}
                 options={productSaleMethods}
                 onChange={onProductSaleMethodChange}
