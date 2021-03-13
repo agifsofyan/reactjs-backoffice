@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Chip from '@material-ui/core/Chip';
 import SmartphoneTwoToneIcon from '@material-ui/icons/SmartphoneTwoTone';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
@@ -12,13 +15,13 @@ import Moment from 'react-moment';
 
 import MUIDataTable from 'mui-datatables';
 
-import { fetchOrder } from '../../../actions/order';
+import { fetchOrders } from '../../../actions/order';
 
 import Spinner from '../../layouts/Spinner';
 
-const Orders = ({ orders, setLoading, fetchOrder }) => {
+const Orders = ({ orders, setLoading, fetchOrders }) => {
     React.useEffect(() => {
-        fetchOrder();
+        fetchOrders();
         // eslint-disable-next-line
     }, []);
 
@@ -41,7 +44,7 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
             } 
         },
         {
-            label: 'Products',
+            label: 'Product(s)',
             name: 'items',
             options: {
                 filter: false,
@@ -72,12 +75,14 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
                                 style={{ marginRight: 5, marginBottom: 2 }}
                             />
                             <br />
-                            <Chip
-                                icon={<SmartphoneTwoToneIcon />}
-                                label={`${value && value.phone_number}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2 }}
-                            />
+                            {value && value.phone_number !== undefined && (
+                                <Chip
+                                    icon={<SmartphoneTwoToneIcon />}
+                                    label={`${value && value.phone_number}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
                         </>
                     )
                 }
@@ -111,7 +116,7 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
             label: 'Subtotal',
             name: 'sub_total_price',
             options: {
-                filter: false,
+                filter: true,
                 filterOptions: {
                     renderValue: v => {
                         return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
@@ -127,7 +132,7 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
             label: 'Total',
             name: 'total_price',
             options: {
-                filter: false,
+                filter: true,
                 filterOptions: {
                     renderValue: v => {
                         return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
@@ -151,7 +156,7 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
             label: 'Discount',
             name: 'dicount_value',
             options: {
-                filter: false,
+                filter: true,
                 filterOptions: {
                     renderValue: v => {
                         return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
@@ -177,6 +182,23 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
                                 size="small"
                                 style={{ marginRight: 5, marginBottom: 2 }}
                             />
+                        </>
+                    )
+                }
+            }
+        },
+        {
+            name: 'Action',
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            <ButtonGroup size="small" aria-label="small outlined button group">
+                                <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Detail</Button>
+                            </ButtonGroup>
                         </>
                     )
                 }
@@ -221,9 +243,9 @@ const Orders = ({ orders, setLoading, fetchOrder }) => {
 }
 
 Orders.propTypes = {
-    fetchOrder: PropTypes.func.isRequired,
     orders: PropTypes.array,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchOrders: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -231,5 +253,5 @@ const mapStateToProps = state => ({
     setLoading: state.order.setLoading
 });
 
-export default connect(mapStateToProps, { fetchOrder })(Orders);
+export default connect(mapStateToProps, { fetchOrders })(Orders);
 

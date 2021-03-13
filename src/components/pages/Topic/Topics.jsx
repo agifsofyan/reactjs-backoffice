@@ -154,11 +154,11 @@ const Topics = ({
 }
 
 Topics.propTypes = {
-    fetchTopic: PropTypes.func.isRequired,
     deleteManyTopic: PropTypes.func.isRequired,
     topic: PropTypes.array,
     delete_topic_many: PropTypes.object,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchTopic: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

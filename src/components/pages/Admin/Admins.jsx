@@ -174,11 +174,11 @@ const Admins = ({
 }
 
 Admins.propTypes = {
-    fetchAdmin: PropTypes.func.isRequired,
     deleteManyAdmin: PropTypes.func.isRequired,
     admins: PropTypes.array,
     delete_admin_many: PropTypes.object,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchAdmin: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

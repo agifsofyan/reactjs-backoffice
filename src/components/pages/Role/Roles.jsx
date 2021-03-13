@@ -158,9 +158,9 @@ const Roles = ({
 }
 
 Roles.propTypes = {
-    fetchRole: PropTypes.func.isRequired,
     roles: PropTypes.array,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchRole: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

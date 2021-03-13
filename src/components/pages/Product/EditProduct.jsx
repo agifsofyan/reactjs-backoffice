@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const UpdateProduct = (props) => {
+const EditProduct = (props) => {
     React.useEffect(() => {
         fetchTopic();
         fetchAgent();
@@ -92,7 +92,6 @@ const UpdateProduct = (props) => {
     const {
         topics, 
         agents,
-        product,
         fetchTopic, 
         fetchAgent,
         updateProduct,
@@ -273,37 +272,37 @@ const UpdateProduct = (props) => {
 
     const onHandleProductBump = e => {
         setProductBump({ ...productBump, [e.target.name]: e.target.value });
-        console.log('[UpdateProduct.onHandleProductBump]', productBump);
+        console.log('[EditProduct.onHandleProductBump]', productBump);
     }
 
     const setProductBumpImage = url => {
         setProductBump({ ...productBump, bump_image: url });
-        console.log('[UpdateProduct.setProductBumpImage]', productBump.bump_image);
+        console.log('[EditProduct.setProductBumpImage]', productBump.bump_image);
     }
 
     const onHandleProductEcommerce = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.value });
-        console.log('[UpdateProduct.onHandleProductEcommerce]', productEcommerce);
+        console.log('[EditProduct.onHandleProductEcommerce]', productEcommerce);
     }
 
     const onHandleProductBonus = e => {
         setProductBonus({ ...productBonus, [e.target.name]: e.target.value });
-        console.log('[UpdateProduct.onHandleProductBonus]', productBonus);
+        console.log('[EditProduct.onHandleProductBonus]', productBonus);
     }
 
     const setProductBonusImage = url => {
         setProductBonus({ ...productBonus, image: url });
-        console.log('[UpdateProduct.setProductBonusImage]', productBonus.image);
+        console.log('[EditProduct.setProductBonusImage]', productBonus.image);
     }
 
     const onHandleProductFeature = e => {
         setProductFeature({ ...productFeature, [e.target.name]: e.target.value });
-        console.log('[UpdateProduct.onHandleProductFeature]', productFeature);
+        console.log('[EditProduct.onHandleProductFeature]', productFeature);
     }
 
     const onHandleProductShipping = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.checked });
-        console.log('[UpdateProduct.onHandleProductShipping]', productEcommerce);
+        console.log('[EditProduct.onHandleProductShipping]', productEcommerce);
     }
 
     const onProductTopicChange = value => {
@@ -320,10 +319,10 @@ const UpdateProduct = (props) => {
         form.topic = topicIds;
 
         setProductTopic(value);
-        console.log('[UpdateProduct.onProductTopicChange]', productTopic);
-        console.log('[UpdateProduct.onProductTopicChange]', topics);
-        console.log('[UpdateProduct.onProductTopicChange]', topicIds);
-        console.log('[UpdateProduct.onProductTopicChange', form.topic);
+        console.log('[EditProduct.onProductTopicChange]', productTopic);
+        console.log('[EditProduct.onProductTopicChange]', topics);
+        console.log('[EditProduct.onProductTopicChange]', topicIds);
+        console.log('[EditProduct.onProductTopicChange', form.topic);
     }
 
     const onProductAgentChange = value => {
@@ -340,10 +339,10 @@ const UpdateProduct = (props) => {
         form.agent = agentIds;
 
         setProductAgent(value);
-        console.log('[UpdateProduct.onProductAgentChange]', productAgent);
-        console.log('[UpdateProduct.onProductAgentChange]', agents);
-        console.log('[UpdateProduct.onProductAgentChange]', agentIds);
-        console.log('[UpdateProduct.onProductAgentChange]', form.agent);
+        console.log('[EditProduct.onProductAgentChange]', productAgent);
+        console.log('[EditProduct.onProductAgentChange]', agents);
+        console.log('[EditProduct.onProductAgentChange]', agentIds);
+        console.log('[EditProduct.onProductAgentChange]', form.agent);
     }
 
     const onProductTypeChange = value => {
@@ -352,7 +351,7 @@ const UpdateProduct = (props) => {
         } else {
             setProductType(null);
         }
-        console.log('[UpdateProduct.onProductTypeChange]', productType);
+        console.log('[EditProduct.onProductTypeChange]', productType);
     }
 
     const onProductVisibilityChange = value => {
@@ -361,7 +360,7 @@ const UpdateProduct = (props) => {
         } else {
             setProductVisibility(null);
         }
-        console.log('[UpdateProduct.onProductVisibilityChange]', productVisibility);
+        console.log('[EditProduct.onProductVisibilityChange]', productVisibility);
     }
 
     const onProductSaleMethodChange = value => {
@@ -370,12 +369,12 @@ const UpdateProduct = (props) => {
         } else {
             setProductSaleMethod(null);
         }
-        console.log('[UpdateProduct.onProductSaleMethodChange]', productSaleMethod);
+        console.log('[EditProduct.onProductSaleMethodChange]', productSaleMethod);
     }
 
     const onHandleChangeForm = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        console.log('[UpdateProduct.onHandleChangeForm]', form);
+        console.log('[EditProduct.onHandleChangeForm]', form);
     }
 
     const onHandleEditorChange = content => {
@@ -553,7 +552,7 @@ const UpdateProduct = (props) => {
     )
 }
 
-UpdateProduct.propTypes = {
+EditProduct.propTypes = {
     topics: PropTypes.array,
     agents: PropTypes.array,
     product: PropTypes.object,
@@ -568,4 +567,4 @@ const mapStateToProps = state => ({
     product: state.product.product
 });
 
-export default connect(mapStateToProps, { fetchTopic, fetchAgent, updateProduct })(UpdateProduct);
+export default connect(mapStateToProps, { fetchTopic, fetchAgent, updateProduct })(EditProduct);

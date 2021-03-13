@@ -10,6 +10,7 @@ import payment from './payment';
 import agent from './agent';
 import image from './image';
 import order from './order';
+import followup from './followup';
 
 export default combineReducers({
     auth,
@@ -21,5 +22,6 @@ export default combineReducers({
     payment,
     agent,
     image,
-    order
+    order,
+    followup
 });

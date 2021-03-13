@@ -217,11 +217,11 @@ const Coupons = ({
 }
 
 Coupons.propTypes = {
-    fetchCoupon: PropTypes.func.isRequired,
     deleteManyCoupon: PropTypes.func.isRequired,
     coupons: PropTypes.array,
     delete_coupon_many: PropTypes.object,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchCoupon: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({

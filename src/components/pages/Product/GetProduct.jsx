@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 
 import { fetchProduct } from '../../../actions/product';
 
-import UpdateProduct from './UpdateProduct';
+import EditProduct from './EditProduct';
 import Spinner from '../../layouts/Spinner';
 
-const GetProduct = ({ product, setLoading, fetchProduct }) => {
+const GetProduct = ({ product, fetchProduct }) => {
     let { id } = useParams();
 
     React.useEffect(() => {
@@ -20,7 +20,7 @@ const GetProduct = ({ product, setLoading, fetchProduct }) => {
     return (
         <React.Fragment>
             {product === null || product._id !== id ? <Spinner /> : (
-                <UpdateProduct
+                <EditProduct
                     id={id}
                     name={product.name}
                     slug={product.slug}
@@ -48,17 +48,15 @@ const GetProduct = ({ product, setLoading, fetchProduct }) => {
     )
 }
 
-UpdateProduct.propTypes = {
+GetProduct.propTypes = {
     product: PropTypes.object.isRequired,
     error: PropTypes.object.isRequired,
-    setLoading: PropTypes.bool.isRequired,
     fetchProduct: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     product: state.product.product,
-    error: state.product.error,
-    setLoading: state.product.setLoading
+    error: state.product.error
 });
 
 export default connect(mapStateToProps, { fetchProduct })(GetProduct);

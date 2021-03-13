@@ -179,11 +179,11 @@ const Payments = ({
 }
 
 Payments.propTypes = {
-    fetchPaymentCount: PropTypes.func.isRequired,
     // deleteManyPayment: PropTypes.func.isRequired,
     payment_methods: PropTypes.array,
     delete_payment_many: PropTypes.object,
-    setLoading: PropTypes.bool.isRequired
+    setLoading: PropTypes.bool.isRequired,
+    fetchPaymentCount: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
