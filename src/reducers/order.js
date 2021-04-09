@@ -17,6 +17,10 @@ export default function (state = INITIAL_STATE, action) {
 
     switch (type) {
         case GET_ORDERS:
+            // // Price
+            // item.prices = {}
+            // item.prices.price = item.price ? item.price.format() : 0
+            // item.prices.sales_price = item.sales_price ? item.sales_price : 0
             return {
                 ...state,
                 orders: payload,

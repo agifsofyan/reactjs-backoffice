@@ -40,7 +40,7 @@ export const fetchProduct = (id) => async dispatch => {
         dispatch({ type: GET_PRODUCT_DETAIL, payload: res.data.data });
     } catch (error) {
         console.log(`[product.fetchProduct] error: ${error}`);
-        dispatch({ type: GET_PRODUCT_DETAIL_FAIL, payload: error.response.data });
+        dispatch({ type: GET_PRODUCT_DETAIL_FAIL, payload: error && error.response && error.response.data });
     }
 }
 
@@ -66,7 +66,7 @@ export const updateProduct = (id, form, history) => async dispatch => {
                 icon: 'success',
                 title: res.data.message
             });
-            history.push('/products');
+            window.location.replace("/products");
         }
         dispatch({ type: UPDATE_PRODUCT, payload: res.data.data });
     } catch (error) {

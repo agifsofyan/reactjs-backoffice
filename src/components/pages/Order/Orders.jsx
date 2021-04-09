@@ -44,17 +44,6 @@ const Orders = ({ orders, setLoading, fetchOrders }) => {
             } 
         },
         {
-            label: 'Product(s)',
-            name: 'items',
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: v => {
-                    return <span>{v && v.length}</span>
-                },
-            }
-        },
-        {
             label: 'Buyer',
             name: 'user_info',
             options: {
@@ -86,6 +75,38 @@ const Orders = ({ orders, setLoading, fetchOrders }) => {
                         </>
                     )
                 }
+            }
+        },
+        {
+            label: 'Product(s)',
+            name: 'items',
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: value => {
+                    return (
+                        <>
+                        {value && value.map(item => {
+                            return (
+                            <>
+                            <Chip
+                                label={`${item && item.product_info && item.product_info.name}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            <br/>
+                            <Chip
+                                label={`${item && item.product_info && item.product_info.price}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            </>
+                            )
+                        })}
+                        </>
+                    )
+                    // return <span>{v && v.length}</span>
+                },
             }
         },
         {
