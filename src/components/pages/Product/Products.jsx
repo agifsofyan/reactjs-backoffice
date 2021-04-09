@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Chip from '@material-ui/core/Chip';
 // import Chip from '@material-ui/core/Chip';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 // import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
@@ -43,137 +44,110 @@ const Products = ({
                 sort: false
             }
         },
-        { 
-            label: 'Product Name',
-            name: 'name', 
-            options: { 
-                filterOptions: { 
-                    fullWidth: true 
-                }
-            } 
-        },
         {
-            label: 'Visibility',
-            name: 'visibility',
+            label: 'Details',
+            name: 'details',
             options: {
-                filter: true,
-                sort: true
-            }
-        },
-        {
-            label: 'Product Code',
-            name: 'code',
-            options: {
-                filter: false
-            }
-        },
-        // {
-        //     label: 'Stock(s)',
-        //     // name: 'type',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             if (value.type !== 'ecommerce') {
-        //                 return <span><code>none</code></span>
-        //             } else if (value.ecommerce === undefined) {
-        //                 return <span>0</span>
-        //             } else {
-        //                 return <span>{value.ecommerce.stock}</span>
-        //             }
-        //         }
-        //     }
-        // },
-        // {
-        //     label: 'Others',
-        //     // name: 'order',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         customBodyRender: value => {
-        //             return (
-        //                 <>
-        //                     <Chip
-        //                         icon={<ShoppingCartTwoToneIcon />}
-        //                         label={`Orders ${value}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<LocalOfferTwoToneIcon />}
-        //                         label={`Coupons ${value.coupon}`} 
-        //                         size="small"
-        //                         style={{ marginRight: 5, marginBottom: 2 }}
-        //                     />
-        //                     <Chip
-        //                         icon={<InsertDriveFileTwoToneIcon />}
-        //                         label={`Contents ${value.content}`} 
-        //                         size="small"
-        //                     />
-        //                 </>
-        //             )
-        //         }
-        //     }
-        // },
-        {
-            label: 'Product Type',
-            name: 'type',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Sale Method',
-            name: 'sale_method',
-            options: {
-                filter: true
-            }
-        },
-        {
-            label: 'Period',
-            name: 'time_period',
-            options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <span>{v > 1 ? v + ' months' : v + ' month'}</span>
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <span>{value > 1 ? value + ' months' : value + ' month'}</span>
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <>
+                            <Chip
+                                label={`${value.name}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            <br />
+                            {value && value.topic && (
+                                <Chip
+                                    label={`${value.topic}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
+                            <br />
+                            {value && value.code && (
+                                <Chip
+                                    label={`${value.code}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
+                            {value && value.slug && (
+                                <Chip
+                                    label={`${value.slug}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
+                            {value && value.time_period && (
+                                <Chip
+                                    label={`${value.time_period}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
+                        </>
+                    )
                 }
             }
         },
         {
             label: 'Price',
-            name: 'price',
+            name: 'prices',
             options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <NumberFormat value={v} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <NumberFormat value={value} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <>
+                            <Chip
+                                label={`${value.price}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2, float: 'right', blockSize: 'auto' }}
+                            />
+                            <br />
+                            <Chip
+                                label={`${value.sales_price}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2, float: 'right' }}
+                            />
+                        </>
+                    )
                 }
             }
         },
         {
-            label: 'Date',
-            name: 'created_at',
+            label: 'Status',
+            name: 'status',
             options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <Moment format="llll">{v}</Moment>
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <Moment format="llll">{value}</Moment>
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <>
+                            <Chip
+                                label={`${value.visibility}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            <br />
+                            <Chip
+                                label={`${value.bump}`} 
+                                size="small"
+                                style={{ marginRight: 5, marginBottom: 2 }}
+                            />
+                            <br />
+                            {value && value.type == "ecommerce" && (
+                                <Chip
+                                    label={`${value.inventory}`} 
+                                    size="small"
+                                    style={{ marginRight: 5, marginBottom: 2 }}
+                                />
+                            )}
+                        </>
+                    )
                 }
             }
         },
@@ -188,6 +162,7 @@ const Products = ({
                         <>
                             <ButtonGroup size="small" aria-label="small outlined button group">
                                 {/* <Button onClick={() => console.log(tableMeta.rowData[0])}>Detail</Button> */}
+                                <Button component={Link} to={`/product/${tableMeta.rowData[0]}/view`}>View</Button>
                                 <Button component={Link} to={`/product/${tableMeta.rowData[0]}/edit`}>Edit</Button>
                             </ButtonGroup>
                         </>
@@ -232,7 +207,6 @@ const Products = ({
             });
         }
     }
-
     return (
         <React.Fragment>
             <SnackbarInfo info="success" message={delete_product_many && delete_product_many.message} />

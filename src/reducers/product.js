@@ -31,9 +31,33 @@ export default function (state = INITIAL_STATE, action) {
             //     Object.assign(item.product, item.count);
             //     delete item.count;
             // });
-            // payload.map(item => {
-            //     newProducts.push(item.product);
-            // });
+            Number.prototype.format = function(n, x) {
+                var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+                return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&.');
+            };
+            
+            payload.map(item => {
+                // Details
+                item.details = {}
+                item.details.name = item.name ? item.name : ''
+                item.details.slug = item.slug ? item.slug : ''
+                item.details.code = item.code ? item.code : ''
+                item.details.time_period = item.time_period ? item.time_period : 0
+                item.details.topic = []
+                item.topic.map(i => item.details.topic.push(i.name))
+               
+                // Price
+                item.prices = {}
+                item.prices.price = item.price ? item.price.format() : 0
+                item.prices.sales_price = item.sales_price ? item.sales_price : 0
+
+                // Status
+                item.status = {}
+                item.status.type = item.type ? item.type : ''
+                item.status.visibility = item.visibility ? item.visibility : ''
+                item.status.bump = item.bump.length == 0 ? 'Bump OFF' : 'Bump ON'
+                item.status.inventory = item.type == 'ecommerce' ? item.ecommerce.stock : ''
+            });
             return {
                 ...state,
                 products: payload,

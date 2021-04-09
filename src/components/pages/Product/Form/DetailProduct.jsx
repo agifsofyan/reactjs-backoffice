@@ -53,10 +53,16 @@ const DetailProduct = (props) => {
         { value: 'crosssale', label: 'Cross-sale' }
     ]
 
+    const productTypeShipping = [
+        { value: false, label: 'COD' },
+        { value: true, label: 'Reguler' },
+    ]
+
     const {
         name,
         slug,
         type,
+        is_reguler,
         price,
         time_period,
         visibility,
@@ -68,7 +74,7 @@ const DetailProduct = (props) => {
         onProductTypeChange,
         onProductVisibilityChange,
         onProductSaleMethodChange,
-        
+        onHandleIsReguler,
         topics,
         onProductTopicChange,
         valueTopic,
@@ -78,7 +84,6 @@ const DetailProduct = (props) => {
         stock,
         charge_checked,
         sale_price,
-
         onHandleProductEcommerce
     } = props;
 
@@ -91,9 +96,33 @@ const DetailProduct = (props) => {
     console.log('[DetailProduct.form.visibility]', visibility);
     console.log('[DetailProduct.form.sale_method]', sale_method);
     // console.log('[DetailProduct.form.point_gamification]', point_gamification);
+    console.log('[props', props);
+    console.log('[DetailProduct.productEcommerce.is_reguler', is_reguler);
     console.log('[DetailProduct.productEcommerce.shipping_charges', charge_checked);
     console.log('[DetailProduct.productEcommerce.weight', weight);
     console.log('[DetailProduct.productEcommerce.stock', stock);
+
+    const setLabel = (arr, value) => {
+        let getData;
+
+        arr.map(item => {
+            if(item.value == value.value ? value.value : value)
+                getData = item
+        })
+
+        return getData ? getData.label : value
+    }
+
+    const setValue = (arr, value) => {
+        let getData;
+
+        arr.map(item => {
+            if(item.value == value.value ? value.value : value)
+                getData = item
+        })
+        console.log('value 1', value, getData)
+        return value
+    }
 
     return (
         <form className={classes.root} noValidate autoComplete="off">
@@ -170,7 +199,7 @@ const DetailProduct = (props) => {
                 onChange={onProductTypeChange}
                 isClearable
             />
-            {type && type.value === 'ecommerce' ? (
+            {(type && (type === 'ecommerce' || type.value === 'ecommerce')) ? (
                 <>
                     <TextField
                         label="Weight"
@@ -188,6 +217,15 @@ const DetailProduct = (props) => {
                         id="stock"
                         value={stock}
                         onChange={onHandleProductEcommerce}
+                    />
+                    <Select
+                        className={classes.select}
+                        placeholder="Select Type Shipping"
+                        defaultInputValue={setLabel(productTypeShipping, is_reguler)}
+                        value={setValue(productTypeShipping, is_reguler)}
+                        options={productTypeShipping}
+                        onChange={onHandleIsReguler}
+                        isClearable
                     />
                     <FormControlLabel
                         control={

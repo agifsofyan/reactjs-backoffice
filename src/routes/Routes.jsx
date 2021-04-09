@@ -13,6 +13,7 @@ import Dashboard from '../components/pages/Dashboard';
 import Products from '../components/pages/Product/Products';
 import AddProduct from '../components/pages/Product/AddProduct';
 import GetProduct from '../components/pages/Product/GetProduct';
+import ViewProduct from '../components/pages/Product/ViewProduct';
 
 import Orders from '../components/pages/Order/Orders';
 import DetailOrder from '../components/pages/Order/DetailOrder';
@@ -68,6 +69,7 @@ const Routes = () => {
                         <PrivateRoute exact path="/products" component={Products} />
                         <PrivateRoute exact path="/product/add" component={AddProduct} />
                         <PrivateRoute exact path="/product/:id/edit" component={GetProduct} />
+                        <PrivateRoute exact path="/product/:id/view" component={ViewProduct} />
 
                         <PrivateRoute exact path="/orders" component={Orders} />
                         <PrivateRoute exact path="/order/:id/detail" component={DetailOrder} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import SwipeableViews from 'react-swipeable-views';
@@ -18,7 +18,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { fetchTopic } from '../../../actions/topic';
 import { fetchAgent } from '../../../actions/agent';
-import { addProduct } from '../../../actions/product';
+import { updateProduct } from '../../../actions/product';
 
 import Swal from 'sweetalert2';
 
@@ -69,15 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AddProduct = ({ 
-    topics, 
-    agents,
-    error, 
-    product,
-    fetchTopic, 
-    fetchAgent,
-    addProduct
-}) => {
+const ShowProduct = (props) => {
     React.useEffect(() => {
         fetchTopic();
         fetchAgent();
@@ -97,36 +89,67 @@ const AddProduct = ({
         showConfirmButton: false
     });
 
+    const {
+        topics, 
+        agents,
+        fetchTopic, 
+        fetchAgent,
+        updateProduct,
+
+        id,
+        name,
+        slug,
+        type,
+        is_reguler,
+        ecommerce,
+        topic,
+        price,
+        time_period,
+        visibility,
+        sale_method,
+        bump,
+        headline,
+        subheadline,
+        description,
+        learn_about,
+        sale_price,
+        image_url,
+        bonus,
+        agent,
+        media_url,
+        section,
+        feature
+    } = props;
+
     // Form Product
     const [form, setForm] = React.useState({
-        name: '',
-        slug: '',
+        name: name,
+        slug: slug,
         type: '',
-        boe: '',
+        is_reguler: '',
         ecommerce: '',
         topic: [],
-        price: 0,
-        time_period: 0,
+        price: price,
+        time_period: time_period,
         visibility: '',
         sale_method: '',
         bump: '',
         // point_gamification: 0,
-        
-        headline: '',
-        subheadline: '',
-        description: '',
+        headline: headline,
+        subheadline: subheadline,
+        description: description,
         learn_about: '',
-        sale_price: 0,
+        sale_price: sale_price,
         image_url: [],
         bonus: '',
         agent: [],
-        media_url: '',
+        media_url: media_url,
         section: '',
         feature: ''
     });
 
     // Learn About
-    const [productLearnAbout, setProductLearnAbout] = React.useState([
+    const [productLearnAbout, setProductLearnAbout] = React.useState(learn_about || [
         { title: '', content: '', note: '' }
     ]);
 
@@ -163,7 +186,7 @@ const AddProduct = ({
     form.learn_about = [...productLearnAbout];
 
     // Section
-    const [productSection, setProductSection] = React.useState([
+    const [productSection, setProductSection] = React.useState(section || [
         { title: '', content: '', image: '' }
     ]);
 
@@ -201,87 +224,90 @@ const AddProduct = ({
 
     // Bump
     const [productBump, setProductBump] = React.useState({
-        bump_name: '',
-        bump_price: 0,
-        bump_image: '',
-        bump_weight: '',
-        bump_heading: '',
-        bump_desc: ''
+        bump_name: bump.bump_name || '',
+        bump_price: bump.bump_price || '',
+        bump_image: bump.bump_image || '',
+        bump_weight: bump.bump_weight || '',
+        bump_heading: bump.bump_heading || '',
+        bump_desc: bump.bump_desc || ''
     });
 
     // Ecommerce
     const [productEcommerce, setProductEcommerce] = React.useState({
-        weight: 0,
-        shipping_charges: true,
-        stock: 0
+        weight: ecommerce && ecommerce.weight &&  ecommerce.weight || 0,
+        shipping_charges: ecommerce && ecommerce.shipping_charges &&  ecommerce.shipping_charges || true,
+        stock: ecommerce && ecommerce.stock &&  ecommerce.stock || 0
     }); 
 
     // Bonus
     const [productBonus, setProductBonus] = React.useState({
-        image: '',
-        title: '',
-        description: ''
+        image: bonus === null ? '' : bonus.image,
+        title: bonus === null ? '' : bonus.title,
+        description: bonus === null ? '' : bonus.description,
     });
 
     // Feature
     const [productFeature, setProductFeature] = React.useState({
-        feature_onheader: '',
+        feature_onheader: feature && feature.feature_onheader || '',
         // feature_onpage: ''
-        active_header: false,
-        active_page: false
+        active_header: feature && feature.active_header || false,
+        active_page: feature && feature.active_page || false
     });
 
     // Topic & Agent
-    const [productTopic, setProductTopic] = React.useState([]);
-    const [productAgent, setProductAgent] = React.useState([]);
+    const [productTopic, setProductTopic] = React.useState(topic || []);
+    const [productAgent, setProductAgent] = React.useState(agent || []);
 
     // Product Type
-    const [productType, setProductType] = React.useState(null);
+    const [productType, setProductType] = React.useState(type || null);
+
+    // Product Type
+    const [typeShipping, setTypeShipping] = React.useState(is_reguler || null);
 
     // Product Visibility
-    const [productVisibility, setProductVisibility] = React.useState(null);
+    const [productVisibility, setProductVisibility] = React.useState(visibility || null);
 
     // Product Sale Method
-    const [productSaleMethod, setProductSaleMethod] = React.useState(null);
+    const [productSaleMethod, setProductSaleMethod] = React.useState(sale_method || null);
 
     // ToDo: Description
 
     // Array of image_url
-    const [productImageUrl, setProductImageUrl] = React.useState([]);
+    const [productImageUrl, setProductImageUrl] = React.useState(image_url || []);
 
     const onHandleProductBump = e => {
         setProductBump({ ...productBump, [e.target.name]: e.target.value });
-        console.log('[AddProduct.onHandleProductBump]', productBump);
+        console.log('[ShowProduct.onHandleProductBump]', productBump);
     }
 
     const setProductBumpImage = url => {
         setProductBump({ ...productBump, bump_image: url });
-        console.log('[AddProduct.setProductBumpImage]', productBump.bump_image);
+        console.log('[ShowProduct.setProductBumpImage]', productBump.bump_image);
     }
 
     const onHandleProductEcommerce = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.value });
-        console.log('[AddProduct.onHandleProductEcommerce]', productEcommerce);
+        console.log('[ShowProduct.onHandleProductEcommerce]', productEcommerce);
     }
 
     const onHandleProductBonus = e => {
         setProductBonus({ ...productBonus, [e.target.name]: e.target.value });
-        console.log('[AddProduct.onHandleProductBonus]', productBonus);
+        console.log('[ShowProduct.onHandleProductBonus]', productBonus);
     }
 
     const setProductBonusImage = url => {
         setProductBonus({ ...productBonus, image: url });
-        console.log('[AddProduct.setProductBonusImage]', productBonus.image);
+        console.log('[ShowProduct.setProductBonusImage]', productBonus.image);
     }
 
     const onHandleProductFeature = e => {
         setProductFeature({ ...productFeature, [e.target.name]: e.target.value });
-        console.log('[AddProduct.onHandleProductFeature]', productFeature);
+        console.log('[ShowProduct.onHandleProductFeature]', productFeature);
     }
 
     const onHandleProductShipping = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.checked });
-        console.log('[AddProduct.onHandleProductShipping]', productEcommerce);
+        console.log('[ShowProduct.onHandleProductShipping]', productEcommerce);
     }
 
     const onProductTopicChange = value => {
@@ -298,10 +324,10 @@ const AddProduct = ({
         form.topic = topicIds;
 
         setProductTopic(value);
-        console.log('[AddProduct.onProductTopicChange]', productTopic);
-        console.log('[AddProduct.onProductTopicChange]', topics);
-        console.log('[AddProduct.onProductTopicChange]', topicIds);
-        console.log('[AddProduct.onProductTopicChange', form.topic);
+        console.log('[ShowProduct.onProductTopicChange]', productTopic);
+        console.log('[ShowProduct.onProductTopicChange]', topics);
+        console.log('[ShowProduct.onProductTopicChange]', topicIds);
+        console.log('[ShowProduct.onProductTopicChange', form.topic);
     }
 
     const onProductAgentChange = value => {
@@ -318,10 +344,10 @@ const AddProduct = ({
         form.agent = agentIds;
 
         setProductAgent(value);
-        console.log('[AddProduct.onProductAgentChange]', productAgent);
-        console.log('[AddProduct.onProductAgentChange]', agents);
-        console.log('[AddProduct.onProductAgentChange]', agentIds);
-        console.log('[AddProduct.onProductAgentChange]', form.agent);
+        console.log('[ShowProduct.onProductAgentChange]', productAgent);
+        console.log('[ShowProduct.onProductAgentChange]', agents);
+        console.log('[ShowProduct.onProductAgentChange]', agentIds);
+        console.log('[ShowProduct.onProductAgentChange]', form.agent);
     }
 
     const onProductTypeChange = value => {
@@ -330,7 +356,16 @@ const AddProduct = ({
         } else {
             setProductType(null);
         }
-        console.log('[AddProduct.onProductTypeChange]', productType);
+        console.log('[ShowProduct.onProductTypeChange]', productType);
+    }
+
+    const onTypeShippingChange = value => {
+        if (value != null) {
+            setTypeShipping(value);
+        } else {
+            setTypeShipping(null);
+        }
+        console.log('[ShowProduct.onTypeShippingChange]', typeShipping);
     }
 
     const onProductVisibilityChange = value => {
@@ -339,7 +374,7 @@ const AddProduct = ({
         } else {
             setProductVisibility(null);
         }
-        console.log('[AddProduct.onProductVisibilityChange]', productVisibility);
+        console.log('[ShowProduct.onProductVisibilityChange]', productVisibility);
     }
 
     const onProductSaleMethodChange = value => {
@@ -348,12 +383,12 @@ const AddProduct = ({
         } else {
             setProductSaleMethod(null);
         }
-        console.log('[AddProduct.onProductSaleMethodChange]', productSaleMethod);
+        console.log('[ShowProduct.onProductSaleMethodChange]', productSaleMethod);
     }
 
     const onHandleChangeForm = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        console.log('[AddProduct.onHandleChangeForm]', form);
+        console.log('[ShowProduct.onHandleChangeForm]', form);
     }
 
     const onHandleEditorChange = content => {
@@ -382,15 +417,20 @@ const AddProduct = ({
         setValue(index);
     }
 
-    const onSave = () => {
+    const onUpdate = () => {
         form.type = productType ? productType.value : '';
+        form.is_reguler = typeShipping ? typeShipping.value : '';
         form.visibility = productVisibility ? productVisibility.value : '';
         form.sale_method = productSaleMethod ? productSaleMethod.value : '';
+
+        if (form.slug === '') {
+            delete form.slug;
+        }
 
         const newForm = {...form}
 
         for (let key in newForm) {
-            if (newForm[key] === '' || (newForm[key] instanceof Array && newForm[key].length === 0)) {
+            if (newForm[key] instanceof Array && newForm[key].length === 0) {
                 delete newForm[key];
             }
         }
@@ -399,22 +439,14 @@ const AddProduct = ({
         //     delete newForm.ecommerce;
         // }
 
-        console.log('onSave', newForm);
+        console.log('onUpdate', newForm);
 
-        addProduct(newForm);
-    }
-
-    if (product && product.statusCode == 201) {
-        Toast.fire({
-            icon: 'success',
-            title: product.message
-        });
-        window.location.replace("/products");
+        updateProduct(id, newForm, history);
     }
 
     return (
         <React.Fragment>
-            <h3>Add Product</h3>
+            <h3>View Product</h3>
             <Button
                 size="small"
                 startIcon={<KeyboardBackspaceTwoToneIcon />}
@@ -423,15 +455,6 @@ const AddProduct = ({
                 style={{ marginBottom: '5px' }}
             >
                 Back
-            </Button>
-            <Button
-                size="small"
-                startIcon={<SaveAltTwoToneIcon />}
-                color="primary"
-                style={{ marginBottom: '5px', float: 'right' }}
-                onClick={() => onSave()}
-            >
-                Save
             </Button>
             <div className={classes.root}>
                 <Paper>
@@ -461,10 +484,12 @@ const AddProduct = ({
                             onHandleProductShipping={onHandleProductShipping}
                             onProductTopicChange={onProductTopicChange}
                             onChange={onHandleChangeForm}
+                            onTypeShippingChange={onTypeShippingChange}
                             onProductTypeChange={onProductTypeChange}
                             onProductVisibilityChange={onProductVisibilityChange}
                             onProductSaleMethodChange={onProductSaleMethodChange}
                             type={productType}
+                            typeShipping={typeShipping}
                             slug={form.slug}
                             name={form.name}
                             price={form.price}
@@ -535,21 +560,19 @@ const AddProduct = ({
     )
 }
 
-AddProduct.propTypes = {
+ShowProduct.propTypes = {
     topics: PropTypes.array,
     agents: PropTypes.array,
-    product: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired,
+    product: PropTypes.object,
     fetchTopic: PropTypes.func.isRequired,
     fetchAgent: PropTypes.func.isRequired,
-    addProduct: PropTypes.func.isRequired
+    updateProduct: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     topics: state.topic.topics,
     agents: state.agent.agents,
-    product: state.product.product,
-    error: state.product.error
+    product: state.product.product
 });
 
-export default connect(mapStateToProps, { fetchTopic, fetchAgent, addProduct })(AddProduct);
+export default connect(mapStateToProps, { fetchTopic, fetchAgent, updateProduct })(ShowProduct);

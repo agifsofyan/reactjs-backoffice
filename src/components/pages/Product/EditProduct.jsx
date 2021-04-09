@@ -100,6 +100,7 @@ const EditProduct = (props) => {
         name,
         slug,
         type,
+        is_reguler,
         ecommerce,
         topic,
         price,
@@ -125,6 +126,7 @@ const EditProduct = (props) => {
         name: name,
         slug: slug,
         type: '',
+        is_reguler: '',
         ecommerce: '',
         topic: [],
         price: price,
@@ -232,9 +234,10 @@ const EditProduct = (props) => {
 
     // Ecommerce
     const [productEcommerce, setProductEcommerce] = React.useState({
-        weight: ecommerce.weight || 0,
-        shipping_charges: ecommerce.shipping_charges || true,
-        stock: ecommerce.stock || 0
+        is_reguler: ecommerce && ecommerce.is_reguler &&  ecommerce.is_reguler || true,
+        weight: ecommerce && ecommerce.weight &&  ecommerce.weight || 0,
+        shipping_charges: ecommerce && ecommerce.shipping_charges &&  ecommerce.shipping_charges || true,
+        stock: ecommerce && ecommerce.stock &&  ecommerce.stock || 0
     }); 
 
     // Bonus
@@ -246,10 +249,10 @@ const EditProduct = (props) => {
 
     // Feature
     const [productFeature, setProductFeature] = React.useState({
-        feature_onheader: feature.feature_onheader || '',
+        feature_onheader: feature && feature.feature_onheader || '',
         // feature_onpage: ''
-        active_header: feature.active_header || false,
-        active_page: feature.active_page || false
+        active_header: feature && feature.active_header || false,
+        active_page: feature && feature.active_page || false
     });
 
     // Topic & Agent
@@ -283,6 +286,11 @@ const EditProduct = (props) => {
     const onHandleProductEcommerce = e => {
         setProductEcommerce({ ...productEcommerce, [e.target.name]: e.target.value });
         console.log('[EditProduct.onHandleProductEcommerce]', productEcommerce);
+    }
+
+    const onHandleIsReguler = value => {
+        setProductEcommerce({ ...productEcommerce, is_reguler: value != null ? value : null});
+        console.log('[EditProduct.onHandleIsReguler]', productEcommerce);
     }
 
     const onHandleProductBonus = e => {
@@ -424,13 +432,12 @@ const EditProduct = (props) => {
         //     delete newForm.ecommerce;
         // }
 
-        console.log('onUpdate', newForm);
-
         updateProduct(id, newForm, history);
     }
 
     return (
         <React.Fragment>
+            {console.log('productEcommerce', productEcommerce)}
             <h3>Edit Product</h3>
             <Button
                 size="small"
@@ -478,10 +485,12 @@ const EditProduct = (props) => {
                             onHandleProductShipping={onHandleProductShipping}
                             onProductTopicChange={onProductTopicChange}
                             onChange={onHandleChangeForm}
+                            onHandleIsReguler={onHandleIsReguler}
                             onProductTypeChange={onProductTypeChange}
                             onProductVisibilityChange={onProductVisibilityChange}
                             onProductSaleMethodChange={onProductSaleMethodChange}
                             type={productType}
+                            is_reguler={productEcommerce.is_reguler}
                             slug={form.slug}
                             name={form.name}
                             price={form.price}
