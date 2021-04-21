@@ -76,59 +76,49 @@ const ListMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary="Tools" />
             </ListItem>
-            <ListItem button onClick={handleClick}>
+            
+            <ListItem button component={Link} to="/topics">
                 <ListItemIcon>
-                    <MoreHorizTwoToneIcon />
+                    <BookTwoToneIcon />
                 </ListItemIcon>
-                <ListItemText primary="Others" />
-                {open ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
+                <ListItemText primary="Topics" />
             </ListItem>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItem button className={classes.nested} component={Link} to="/topics">
-                        <ListItemIcon>
-                            <BookTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Topics" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} component={Link} to="/roles">
-                        <ListItemIcon>
-                            <SecurityTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Roles" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} component={Link} to="/admins">
-                        <ListItemIcon>
-                            <PeopleAltTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Administrators" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} component={Link} to="/coupons">
-                        <ListItemIcon>
-                            <LocalOfferTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Coupons" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} component={Link} to="/payments">
-                        <ListItemIcon>
-                            <AccountBalanceWalletTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Payments" />
-                    </ListItem>
-                    <ListItem button className={classes.nested}>
-                        <ListItemIcon>
-                            <InsertDriveFileTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Contents" />
-                    </ListItem>
-                    <ListItem button className={classes.nested}>
-                        <ListItemIcon>
-                            <ChatTwoToneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Templates" />
-                    </ListItem>
-                </List>
-            </Collapse>
+            <ListItem button component={Link} to="/roles">
+                <ListItemIcon>
+                    <SecurityTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Roles" />
+            </ListItem>
+            <ListItem button component={Link} to="/admins">
+                <ListItemIcon>
+                    <PeopleAltTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Administrators" />
+            </ListItem>
+            <ListItem button component={Link} to="/coupons">
+                <ListItemIcon>
+                    <LocalOfferTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Coupons" />
+            </ListItem>
+            <ListItem button component={Link} to="/payments">
+                <ListItemIcon>
+                    <AccountBalanceWalletTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Payments" />
+            </ListItem>
+            <ListItem button>
+                <ListItemIcon>
+                    <InsertDriveFileTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Contents" />
+            </ListItem>
+            <ListItem button>
+                <ListItemIcon>
+                    <ChatTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="Templates" />
+            </ListItem>
         </div>
     )
 }
