@@ -36,8 +36,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import NoDataAmico from './no-data-amico.png';
 
-import { fetchOrder } from '../../../actions/order';
-import { fetchFollowUps } from '../../../actions/followup';
+import { fetchOrder, fetchFollowUps } from '../../../actions/order';
 
 import Spinner from '../../layouts/Spinner';
 
@@ -111,7 +110,6 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
 
     React.useEffect(() => {
         fetchOrder(id);
-        fetchFollowUps();
         // eslint-disable-next-line
     },[]);
 
@@ -481,7 +479,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                         </TabPanel>
                         <TabPanel value={value} index={5} dir={theme.direction}>
                             {/* Follow Up */}
-                            {followups.map((item, i) => (
+                            {/* {followups.map((item, i) => (
                                 <>
                                     {item.type === 'WA' && (
                                         <>
@@ -493,7 +491,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                         </>
                                     )}
                                 </>
-                            ))}
+                            ))} */}
                         </TabPanel>
                     </SwipeableViews>
                 </div>
@@ -508,7 +506,6 @@ DetailOrder.propTypes = {
     order: PropTypes.object,
     error: PropTypes.object,
     fetchOrder: PropTypes.func.isRequired,
-    fetchFollowUps: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -517,4 +514,4 @@ const mapStateToProps = state => ({
     error: state.order.error
 });
 
-export default connect(mapStateToProps, { fetchOrder, fetchFollowUps })(DetailOrder);
+export default connect(mapStateToProps, { fetchOrder })(DetailOrder);

@@ -11,7 +11,7 @@ import api from '../utils/api';
 export const me = () => async dispatch => {
     try {
         const res = await api.get('/admins/me');
-        dispatch({ type: ME, payload: res.data.data });
+        dispatch({ type: ME, payload: res && res.data && res.data.data });
     } catch (error) {
         console.log(`[auth.me] error: ${error}`);
         dispatch({ type: ME_ERROR });
@@ -21,7 +21,7 @@ export const me = () => async dispatch => {
 export const login = (data) => async dispatch => {
     try {
         const res = await api.post('/admins/login', data);
-        dispatch({ type: LOGIN_SUCCESS, payload: res.data.result });
+        dispatch({ type: LOGIN_SUCCESS, payload: res && res.data && res.data.result });
         dispatch(me());
     } catch (error) {
         console.log(`[auth.login] error: ${error.response.data.message}`);

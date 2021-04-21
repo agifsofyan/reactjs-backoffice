@@ -48,6 +48,7 @@ const Products = ({
             label: 'Details',
             name: 'details',
             options: {
+                setCellProps: () => ({ style: { minWidth: '150px', maxWidth: '150px' }}),
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -105,13 +106,13 @@ const Products = ({
                             <Chip
                                 label={`${value.price}`} 
                                 size="small"
-                                style={{ marginRight: 5, marginBottom: 2, float: 'right', blockSize: 'auto' }}
+                                style={{ marginRight: 5, marginBottom: 2, blockSize: 'auto' }}
                             />
                             <br />
                             <Chip
                                 label={`${value.sales_price}`} 
                                 size="small"
-                                style={{ marginRight: 5, marginBottom: 2, float: 'right' }}
+                                style={{ marginRight: 5, marginBottom: 2}}
                             />
                         </>
                     )
