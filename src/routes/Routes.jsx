@@ -20,6 +20,7 @@ import DetailOrder from '../components/pages/Order/DetailOrder';
 
 import Topics from '../components/pages/Topic/Topics';
 import Roles from '../components/pages/Role/Roles';
+import Contents from '../components/pages/Content/Contents';
 import Admins from '../components/pages/Admin/Admins';
 import Coupons from '../components/pages/Coupon/Coupons';
 import Payments from '../components/pages/Payment/Payments';
@@ -76,6 +77,7 @@ const Routes = () => {
 
                         <PrivateRoute exact path="/topics" component={Topics} />
                         <PrivateRoute exact path="/roles" component={Roles} />
+                        <PrivateRoute exact path="/contents" component={Contents} />
                         <PrivateRoute exact path="/admins" component={Admins} />
                         <PrivateRoute exact path="/coupons" component={Coupons} />
                         <PrivateRoute exact path="/payments" component={Payments} />

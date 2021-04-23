@@ -107,7 +107,7 @@ const ListMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary="Payments" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/contents">
                 <ListItemIcon>
                     <InsertDriveFileTwoToneIcon />
                 </ListItemIcon>

@@ -8,6 +8,7 @@ import admin from './admin';
 import coupon from './coupon';
 import payment from './payment';
 import agent from './agent';
+import content from './content';
 import image from './image';
 import order from './order';
 import followup from './followup';
@@ -23,5 +24,6 @@ export default combineReducers({
     agent,
     image,
     order,
-    followup
+    followup,
+    content
 });
