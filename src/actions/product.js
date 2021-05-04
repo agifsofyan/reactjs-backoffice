@@ -24,9 +24,10 @@ const Toast = Swal.mixin({
     showConfirmButton: false
 });
 
-export const fetchProducts = () => async dispatch => {
+export const fetchProducts = (params) => async dispatch => {
     try {
-        const res = await api.get('/products');
+        let _param = params || ''
+        const res = await api.get('/products' + _param);
         dispatch({ type: GET_PRODUCTS, payload: res.data.data });
     } catch (error) {
         console.log(`[product.fetchProducts] error: ${error}`);

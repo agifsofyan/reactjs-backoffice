@@ -18,12 +18,12 @@ import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import MUIDataTable from 'mui-datatables';
 import Swal from 'sweetalert2';
 
-import { fetchProducts, deleteManyProduct } from '../../../actions/product';
+import { fetchProducts, deleteManyProduct } from '../../../../actions/product';
 
-import Spinner from '../../layouts/Spinner';
-import SnackbarInfo from '../../layouts/SnackbarInfo';
+import Spinner from '../../../layouts/Spinner';
+import SnackbarInfo from '../../../layouts/SnackbarInfo';
 
-const Products = ({ 
+const PostContent = ({ 
     products, 
     delete_product_many, 
     setLoading, 
@@ -37,117 +37,37 @@ const Products = ({
 
     const columns = [
         {
-            name: '_id',
-            options: {
-                display: false,
-                filter: false,
-                sort: false
-            }
-        },
-        {
-            label: 'Details',
-            name: 'details',
-            options: {
-                setCellProps: () => ({ style: { minWidth: '150px', maxWidth: '150px' }}),
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return (
-                        <>
-                            <Chip
-                                label={`${value.name}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2 }}
-                            />
-                            <br />
-                            {value && value.topic && (
-                                <Chip
-                                    label={`${value.topic}`} 
-                                    size="small"
-                                    style={{ marginRight: 5, marginBottom: 2 }}
-                                />
-                            )}
-                            <br />
-                            {value && value.code && (
-                                <Chip
-                                    label={`${value.code}`} 
-                                    size="small"
-                                    style={{ marginRight: 5, marginBottom: 2 }}
-                                />
-                            )}
-                            {value && value.slug && (
-                                <Chip
-                                    label={`${value.slug}`} 
-                                    size="small"
-                                    style={{ marginRight: 5, marginBottom: 2 }}
-                                />
-                            )}
-                            {value && value.time_period && (
-                                <Chip
-                                    label={`${value.time_period} month`} 
-                                    size="small"
-                                    style={{ marginRight: 5, marginBottom: 2 }}
-                                />
-                            )}
-                        </>
-                    )
-                }
-            }
-        },
-        {
-            label: 'Price',
-            name: 'prices',
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return (
-                        <>
-                            <Chip
-                                label={`${value.price}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2, blockSize: 'auto' }}
-                            />
-                            <br />
-                            <Chip
-                                label={`${value.sales_price}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2}}
-                            />
-                        </>
-                    )
-                }
-            }
-        },
-        {
-            label: 'Status',
+            label: 'Post Name',
             name: 'status',
             options: {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <>
-                            <Chip
-                                label={`${value.visibility}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2 }}
-                            />
-                            <br />
-                            <Chip
-                                label={`${value.bump}`} 
-                                size="small"
-                                style={{ marginRight: 5, marginBottom: 2 }}
-                            />
-                            <br />
-                            {value && value.type == "ecommerce" && (
-                                <Chip
-                                    label={`${value.inventory}`} 
-                                    size="small"
-                                    style={{ marginRight: 5, marginBottom: 2 }}
-                                />
-                            )}
-                        </>
+                    return (value.type
+                    )
+                }
+            }
+        },
+        {
+            label: 'Post Topic',
+            name: 'status',
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return (value.type
+                    )
+                }
+            }
+        },
+        {
+            label: 'Post Type',
+            name: 'status',
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return (value.type
                     )
                 }
             }
@@ -163,8 +83,7 @@ const Products = ({
                         <>
                             <ButtonGroup size="small" aria-label="small outlined button group">
                                 {/* <Button onClick={() => console.log(tableMeta.rowData[0])}>Detail</Button> */}
-                                <Button component={Link} onClick={() => window.open(`https://laruno.id/product-detail/${tableMeta.rowData[1].slug}`,'_blank')}>View</Button>
-                                <Button component={Link} to={`/product/${tableMeta.rowData[0]}/edit`}>Edit</Button>
+                                <Button component={Link} to={`/contents/add/${tableMeta.rowData[0].slug}`}>Delete</Button>
                             </ButtonGroup>
                         </>
                     )
@@ -214,7 +133,7 @@ const Products = ({
             {setLoading ? <Spinner /> : (
                 <MUIDataTable 
                     title={<div>
-                        <h2>Product List</h2>
+                        <h2>List Of Post</h2>
                         <Button
                             variant="contained"
                             color="default"
@@ -236,7 +155,7 @@ const Products = ({
     )
 }
 
-Products.propTypes = {
+PostContent.propTypes = {
     fetchProducts: PropTypes.func.isRequired,
     deleteManyProduct: PropTypes.func.isRequired,
     products: PropTypes.array,
@@ -250,4 +169,4 @@ const mapStateToProps = state => ({
     setLoading: state.product.setLoading
 });
 
-export default connect(mapStateToProps, { fetchProducts, deleteManyProduct })(Products);
+export default connect(mapStateToProps, { fetchProducts, deleteManyProduct })(PostContent);

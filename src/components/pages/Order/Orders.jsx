@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Select from 'react-select';
 
 import PropTypes from 'prop-types';
 
@@ -9,6 +10,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Chip from '@material-ui/core/Chip';
 import SmartphoneTwoToneIcon from '@material-ui/icons/SmartphoneTwoTone';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+import { Container } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -80,7 +82,6 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
             label: 'Invoice',
             name: 'invoice', 
             options: { 
-                setCellProps: () => ({ style: { minWidth: '130px', maxWidth: '130px' }}),
                 filterOptions: { 
                     fullWidth: true 
                 }
@@ -90,7 +91,6 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
             label: 'Buyer',
             name: 'user_info',
             options: {
-                setCellProps: () => ({ style: { minWidth: '90px', maxWidth: '90px' }}),
                 filter: false,
                 // filterOptions: {
                 //     renderValue: v => {
@@ -108,10 +108,10 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                                 style={{ marginRight: 5, marginBottom: 2 }}
                             />
                             <br />
-                            {value && value.user_info && value.user_info.phone_number !== undefined && (
+                            {value && (
                                 <Chip
                                     icon={<SmartphoneTwoToneIcon />}
-                                    label={`${value && value.user_info.phone_number}`} 
+                                    label={`${value && value.whatsapp}`} 
                                     size="small"
                                     style={{ marginRight: 5, marginBottom: 2 }}
                                 />
@@ -201,32 +201,32 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                                 <Chip
                                     label={1} 
                                     size="small"
-                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', background: data[0].is_done ? 'green' : 'yellow'}}
-                                    onClick={() => handleClickOpenFollowUp(1, value, data[0].is_done ? 'green' : 'yellow')}
+                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', color: 'white', background: data[0].is_done ? '#25D366' : '#FF9800'}}
+                                    onClick={() => handleClickOpenFollowUp(1, value, data[0].is_done ? '#25D366' : '#FF9800')}
                                 />
                                 <Chip
                                     label={2} 
                                     size="small"
-                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', background: data[1].is_done ? 'green' : data[1].next ? 'yellow' : 'gray' }}
-                                    onClick={() => handleClickOpenFollowUp(2, value, data[1].is_done ? 'green' : data[1].next ? 'yellow' : 'gray')}
+                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', color: 'white', background: data[1].is_done ? '#25D366' : data[1].next ? '#FF9800' : '#e0e0e0' }}
+                                    onClick={() => handleClickOpenFollowUp(2, value, data[1].is_done ? '#25D366' : data[1].next ? '#FF9800' : '#e0e0e0')}
                                 />
                                 <Chip
                                     label={3} 
                                     size="small"
-                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', background: data[2].is_done ? 'green' : data[2].next ? 'yellow' : 'gray' }}
-                                    onClick={() => handleClickOpenFollowUp(3, value, data[2].is_done ? 'green' : data[2].next ? 'yellow' : 'gray')}
+                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', color: 'white', background: data[2].is_done ? '#25D366' : data[2].next ? '#FF9800' : '#e0e0e0' }}
+                                    onClick={() => handleClickOpenFollowUp(3, value, data[2].is_done ? '#25D366' : data[2].next ? '#FF9800' : '#e0e0e0')}
                                 />
                                 <Chip
                                     label={4} 
                                     size="small"
-                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', background: data[3].is_done ? 'green' : data[3].next ? 'yellow' : 'gray' }}
-                                    onClick={() => handleClickOpenFollowUp(4, value, data[3].is_done ? 'green' : data[3].next ? 'yellow' : 'gray')}
+                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', color: 'white', background: data[3].is_done ? '#25D366' : data[3].next ? '#FF9800' : '#e0e0e0' }}
+                                    onClick={() => handleClickOpenFollowUp(4, value, data[3].is_done ? '#25D366' : data[3].next ? '#FF9800' : '#e0e0e0')}
                                 />
                                 <Chip
                                     label={5} 
                                     size="small"
-                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', background: data[4].is_done ? 'green' : data[4].next ? 'yellow' : 'gray' }}
-                                    onClick={() => handleClickOpenFollowUp(5, value, data[4].is_done ? 'green' : data[4].next ? 'yellow' : 'gray')}
+                                    style={{ marginRight: 5, marginBottom: 2, cursor: 'pointer', color: 'white', background: data[4].is_done ? '#25D366' : data[4].next ? '#FF9800' : '#e0e0e0' }}
+                                    onClick={() => handleClickOpenFollowUp(5, value, data[4].is_done ? '#25D366' : data[4].next ? '#FF9800' : '#e0e0e0')}
                                 />
                             </>
                         )
@@ -250,7 +250,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                             </ButtonGroup>
                             <br/>
                             <ButtonGroup size="small" aria-label="small outlined button group">
-                                <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Detail</Button>
+                                <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Delete</Button>
                             </ButtonGroup>
                             <br/>
                             <ButtonGroup size="small" aria-label="small outlined button group">
@@ -276,6 +276,8 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
         filterType: 'dropdown',
         responsive: 'vertical',
         tableBodyHeight: '100%',
+        tableBodyWidth: '100%',
+        maxWidth: "xl",
         tableBodyMaxHeight: '400px',
         sortOrder: {
             name: 'create_date',
@@ -288,24 +290,22 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
     }
 
     const handleClickOpenFollowUp = (nomor, obj, warna) => {
-        fetchFollowUps(obj['_id'])
-        message = followups && followups.data && followups.data.activity[open && open.nomor-1 || 0].message || ''
+        message = obj.followup.activity[nomor-1 || 0].message || ''
         let name = obj.user_info.name
-        let contry_code = obj.user_info.phone_number && obj.user_info.phone_number[0] && obj.user_info.phone_number[0].country_code || ''
-        let hp = obj.user_info.phone_number && obj.user_info.phone_number[0] && obj.user_info.phone_number[0].phone_number || ''
+        let hp = obj.user_info.whatsapp || ''
         if(hp && hp.substring(0, 1) == 0)
             hp = hp.substring(1, hp.length)
 
-        setOpen({...open, open: true, nomor, name, hp: contry_code + hp, id: obj['_id'], warna, message});
+        setOpen({...open, open: true, nomor, name, hp: hp, id: obj['_id'], warna, message});
     };
   
-    const handleCloseFollowUp = (condition, id) => {
-        message = message.replace('{name}', open.name)
+    const handleCloseFollowUp = (condition, id, warna) => {
+        message = message.replace('{nama}', open.name)
         setOpen({...open, open: false})
         
         condition && condition == "up" && window.open('http://wa.me/' + open.hp + '/?text=' + message, '_blank');
-        condition && condition == "up" && postFollowUp(id, message)
-        condition && condition == "up" && fetchOrders()
+        condition && condition == "up" && warna == "#FF9800" && postFollowUp(id, message)
+        condition && condition == "up" && warna == "#FF9800" && fetchOrders()
         
     };
 
@@ -351,7 +351,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                     Name :  {open && open.name || ''}
                     </Typography>
                     <Typography gutterBottom>
-                    No. HP : {open && open.hp || ''}
+                    Phone : {open && open.hp || ''}
                     </Typography>
                     <Typography gutterBottom>
                     Message : 
@@ -367,7 +367,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={() => handleCloseFollowUp('up', open.id)} disabled={open && open.warna != "yellow" || false} color="primary">
+                    <Button autoFocus onClick={() => handleCloseFollowUp('up', open.id, open.warna)} color="primary">
                     Follow Up
                     </Button>
                 </DialogActions>
@@ -398,7 +398,19 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                             <tr>
                                 <td>Ubah Status</td>
                                 <td>:</td>
-                                <td></td>
+                                <td>
+                                    <Select
+                                        className={classes.select}
+                                        placeholder="Ubah Status"
+                                        // options={topics}
+                                        // value={valueTopic}
+                                        // getOptionValue={(option) => option._id}
+                                        // getOptionLabel={(option) => option.name}
+                                        // onChange={onProductTopicChange}
+                                        isClearable
+                                        isMulti
+                                    />
+                                </td>
                             </tr>
                         </table>
                     </Typography>
@@ -418,10 +430,10 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                                 <td>:</td>
                                 <td>{pay.obj.user_info.email || ''}</td>
                             </tr>}
-                            {pay && pay.obj && pay.obj.user_info && pay.obj.user_info.phone_number && pay.obj.user_info.phone_number.length > 0 && <tr>
+                            {pay && pay.obj && pay.obj.user_info && pay.obj.user_info.whatsapp && <tr>
                                 <td>Phone</td>
                                 <td>:</td>
-                                <td>{pay.obj.user_info.phone_number[0].country_code || ''} {pay.obj.user_info.phone_number[0].phone_number || ''}</td>
+                                <td>{pay.obj.user_info.whatsapp || ''}</td>
                             </tr>}
                             {pay && pay.obj && pay.obj.user_info && pay.obj.user_info.address && pay.obj.user_info.address.length > 0 && <tr>
                                 <td>Alamat</td>
@@ -505,20 +517,37 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
             
             <Dialog onClose={handleCloseShipping} aria-labelledby="customized-dialog-title" open={shipping && shipping.open || false}>
                 <DialogTitle id="customized-dialog-title" onClose={handleCloseShipping}>
-                    Data Shipping
+                    Data Bonus
                 </DialogTitle>
                 <DialogContent dividers style={{width: '500px'}}>
                     <Typography gutterBottom>
-                    Invoice Number : {shipping && shipping.obj && shipping.obj || ''}
+                        <Select
+                            className={classes.select}
+                            placeholder="Select Tracking"
+                            // options={topics}
+                            // value={valueTopic}
+                            // getOptionValue={(option) => option._id}
+                            // getOptionLabel={(option) => option.name}
+                            // onChange={onProductTopicChange}
+                            isClearable
+                            isMulti
+                        />
                     </Typography>
                     <Typography gutterBottom>
-                    Order Date : 
-                    </Typography>
-                    <Typography gutterBottom>
-                    Status Payment :
-                    </Typography>
-                    <Typography gutterBottom>
-                    Ubah Status : 
+                        <Select
+                            className={classes.select}
+                            placeholder="Select Bonus"
+                            // options={topics}
+                            // value={valueTopic}
+                            // getOptionValue={(option) => option._id}
+                            // getOptionLabel={(option) => option.name}
+                            // onChange={onProductTopicChange}
+                            isClearable
+                            isMulti
+                        />
+                    <Button autoFocus onClick={handleCloseShipping} color="primary">
+                    Save
+                    </Button>
                     </Typography>
                 </DialogContent>
                 <DialogActions>

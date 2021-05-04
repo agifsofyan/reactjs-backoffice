@@ -41,10 +41,6 @@ export const fetchFollowUps = (id) => async dispatch => {
     }
 }
 
-const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
-
 export const postFollowUp = (id, message) => async dispatch => {
     try {
         const res = await api.post(`/followups/${id}`, {message});
