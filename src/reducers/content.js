@@ -2,7 +2,9 @@ import {
     GET_CONTENTS,
     GET_CONTENTS_FAIL,
     GET_CONTENT_DETAIL,
-    GET_CONTENT_DETAIL_FAIL
+    GET_CONTENT_DETAIL_FAIL,
+    ADD_CONTENT,
+    ADD_CONTENT_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -14,7 +16,6 @@ const INITIAL_STATE = {
 
 export default function (state = INITIAL_STATE, action) {
     const { type, payload } = action;
-    console.log('action',action)
 
     switch (type) {
         case GET_CONTENTS:
@@ -36,6 +37,18 @@ export default function (state = INITIAL_STATE, action) {
                 setLoading: false
             }
         case GET_CONTENT_DETAIL_FAIL:
+            return {
+                ...state,
+                error: payload,
+                setLoading: false
+            }
+        case ADD_CONTENT:
+            return {
+                ...state,
+                content: payload,
+                setLoading: false
+            }
+        case ADD_CONTENT_FAIL:
             return {
                 ...state,
                 error: payload,

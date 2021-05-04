@@ -12,6 +12,7 @@ import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone';
 import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 import SupervisorAccountTwoToneIcon from '@material-ui/icons/SupervisorAccountTwoTone';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import MUIDataTable from 'mui-datatables';
 // import Swal from 'sweetalert2';
@@ -61,6 +62,24 @@ const Contents = ({
                     fullWidth: true 
                 }
             } 
+        },
+        {
+            name: 'Action',
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            <ButtonGroup size="small" aria-label="small outlined button group">
+                                {/* <Button onClick={() => console.log(tableMeta.rowData[0])}>Detail</Button> */}
+                                <Button component={Link} to={`/contents/edit/${tableMeta.rowData[0]}`}>Edit</Button>
+                            </ButtonGroup>
+                        </>
+                    )
+                }
+            }
         }
     ];
 

@@ -20,6 +20,8 @@ import DetailOrder from '../components/pages/Order/DetailOrder';
 
 import Topics from '../components/pages/Topic/Topics';
 import Roles from '../components/pages/Role/Roles';
+import AddContent from '../components/pages/Content/AddContent';
+import SubFulfillmentContent from '../components/pages/Content/Form/SubFulfillmentContent';
 import Contents from '../components/pages/Content/Contents';
 import Admins from '../components/pages/Admin/Admins';
 import Coupons from '../components/pages/Coupon/Coupons';
@@ -64,7 +66,7 @@ const Routes = () => {
                 <Navbar />
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
-                    <Container maxWidth="lg" className={classes.container}>
+                    <Container maxWidth={false} className={classes.container}>
                         <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
                         <PrivateRoute exact path="/products" component={Products} />
@@ -78,6 +80,9 @@ const Routes = () => {
                         <PrivateRoute exact path="/topics" component={Topics} />
                         <PrivateRoute exact path="/roles" component={Roles} />
                         <PrivateRoute exact path="/contents" component={Contents} />
+                        <PrivateRoute exact path="/contents/add" component={AddContent} />
+                        <PrivateRoute exact path="/contents/add/:id" component={SubFulfillmentContent} />
+                        <PrivateRoute exact path="/contents/edit/:id" component={AddContent} />
                         <PrivateRoute exact path="/admins" component={Admins} />
                         <PrivateRoute exact path="/coupons" component={Coupons} />
                         <PrivateRoute exact path="/payments" component={Payments} />

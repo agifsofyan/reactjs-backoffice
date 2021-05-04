@@ -517,7 +517,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
             
             <Dialog onClose={handleCloseShipping} aria-labelledby="customized-dialog-title" open={shipping && shipping.open || false}>
                 <DialogTitle id="customized-dialog-title" onClose={handleCloseShipping}>
-                    Data Shipping
+                    Data Bonus
                 </DialogTitle>
                 <DialogContent dividers style={{width: '500px'}}>
                     <Typography gutterBottom>
