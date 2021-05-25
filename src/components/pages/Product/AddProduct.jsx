@@ -120,7 +120,10 @@ const AddProduct = ({
         image_url: [],
         bonus: '',
         agent: [],
-        media_url: '',
+        media: {
+            isVideo: false,
+            url: ""
+        },
         section: '',
         feature: ''
     });
@@ -324,31 +327,28 @@ const AddProduct = ({
         console.log('[AddProduct.onProductAgentChange]', form.agent);
     }
 
-    const onProductTypeChange = value => {
-        if (value != null) {
-            setProductType(value);
+    const onProductTypeChange = val => {
+        if (val != null) {
+            setProductType(val);
         } else {
             setProductType(null);
         }
-        console.log('[AddProduct.onProductTypeChange]', productType);
     }
 
-    const onProductVisibilityChange = value => {
-        if (value != null) {
-            setProductVisibility(value);
+    const onProductVisibilityChange = val => {
+        if (val != null) {
+            setProductVisibility(val);
         } else {
             setProductVisibility(null);
         }
-        console.log('[AddProduct.onProductVisibilityChange]', productVisibility);
     }
 
-    const onProductSaleMethodChange = value => {
-        if (value != null) {
-            setProductSaleMethod(value);
+    const onProductSaleMethodChange = val => {
+        if (val != null) {
+            setProductSaleMethod(val);
         } else {
             setProductSaleMethod(null);
         }
-        console.log('[AddProduct.onProductSaleMethodChange]', productSaleMethod);
     }
 
     const onHandleChangeForm = e => {
@@ -360,8 +360,8 @@ const AddProduct = ({
         setForm({ ...form, description: content });
     }
 
-    const setMediaUrl = url => {
-        setForm({ ...form, media_url: url });
+    const setMedia = media => {
+        setForm({ ...form, media});
     }
 
     form.image_url = productImageUrl;
@@ -390,16 +390,24 @@ const AddProduct = ({
         const newForm = {...form}
 
         for (let key in newForm) {
-            if (newForm[key] === '' || (newForm[key] instanceof Array && newForm[key].length === 0)) {
+            if (newForm[key] === ''
+             || (newForm[key] instanceof Array && newForm[key].length === 0)) {
                 delete newForm[key];
             }
+            if((newForm[key] instanceof Array && newForm[key].length > 0 && newForm[key][0].bump_name == "")
+            || (newForm[key] instanceof Array && newForm[key].length > 0 && newForm[key][0].title == ""))
+            newForm[key] = []
+
+            if((newForm[key] instanceof Object && newForm[key].title == "")
+                || (newForm[key] instanceof Object && newForm[key].stock == 0))
+            newForm[key] = {}
         }
 
         // if (form.type !== 'ecommerce') {
         //     delete newForm.ecommerce;
         // }
 
-        console.log('onSave', newForm);
+        // console.log('onSave', newForm);
 
         addProduct(newForm);
     }
@@ -436,7 +444,7 @@ const AddProduct = ({
             <div className={classes.root}>
                 <Paper>
                     <Tabs
-                        value={value}
+                        value={value || 0}
                         onChange={onHandleChange}
                         indicatorColor="primary"
                         textColor="primary"
@@ -451,10 +459,10 @@ const AddProduct = ({
                 </Paper>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
+                    index={value || 0}
                     onChangeIndex={onHandleChangeIndex}
                 >
-                    <TabPanel value={value} index={0} dir={theme.direction}>
+                    <TabPanel value={value || 0} index={0} dir={theme.direction}>
                         {/* Form Detail */}
                         <DetailProduct 
                             topics={topics}
@@ -486,8 +494,8 @@ const AddProduct = ({
                             subheadline={form.subheadline}
                             description={form.description}
                             agents={agents}
-                            media_url={form.media_url}
-                            setMediaUrl={setMediaUrl}
+                            media={form.media}
+                            setMedia={setMedia}
                             valueAgent={productAgent}
                             onProductAgentChange={onProductAgentChange}
                             onChange={onHandleChangeForm}

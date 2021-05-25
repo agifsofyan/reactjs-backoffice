@@ -31,7 +31,7 @@ export const fetchProducts = (params) => async dispatch => {
         dispatch({ type: GET_PRODUCTS, payload: res.data.data });
     } catch (error) {
         console.log(`[product.fetchProducts] error: ${error}`);
-        dispatch({ type: GET_PRODUCTS_FAIL, payload: error.response.data });
+        dispatch({ type: GET_PRODUCTS_FAIL, payload: error && error.response && error.response.data });
     }
 }
 

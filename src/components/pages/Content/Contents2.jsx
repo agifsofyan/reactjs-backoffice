@@ -1,33 +1,34 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 
 import PropTypes from 'prop-types';
 
-// import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone';
 import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 import SupervisorAccountTwoToneIcon from '@material-ui/icons/SupervisorAccountTwoTone';
-// import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import MUIDataTable from 'mui-datatables';
 // import Swal from 'sweetalert2';
 
-import { fetchRole } from '../../../actions/role';
+import { fetchContents } from '../../../actions/content';
 
 import Spinner from '../../layouts/Spinner';
 // import SnackbarInfo from '../../layouts/SnackbarInfo';
 
-const Roles = ({ 
-    roles, 
+const Contents2 = ({ 
+    contents, 
     setLoading, 
-    fetchRole
+    fetchContents
 }) => {
     React.useEffect(() => {
-        fetchRole();
+        fetchContents();
         // eslint-disable-next-line
     },[]);
 
@@ -41,8 +42,19 @@ const Roles = ({
             }
         },
         { 
-            label: 'Role',
-            name: 'adminType', 
+            label: 'Title',
+            name: 'title', 
+            options: { 
+                filter: true,
+                sort: true,
+                filterOptions: { 
+                    fullWidth: true 
+                }
+            } 
+        },
+        { 
+            label: 'Description',
+            name: 'desc', 
             options: { 
                 filter: true,
                 sort: true,
@@ -52,59 +64,20 @@ const Roles = ({
             } 
         },
         {
-            label: 'Read & Write',
-            name: 'readWrite',
+            name: 'Action',
             options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <span>{v ? 'active' : 'inactive'}</span>
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <Chip
-                            icon={value ? <CheckTwoToneIcon /> : <CloseTwoToneIcon />}
-                            label={value ? 'active' : 'inactive'} 
-                            size="small"
-                            style={{ marginRight: 5, marginBottom: 2 }}
-                        />
+                        <>
+                            <ButtonGroup size="small" aria-label="small outlined button group">
+                                {/* <Button onClick={() => console.log(tableMeta.rowData[0])}>Detail</Button> */}
+                                <Button component={Link} to={`/contents/edit/${tableMeta.rowData[0]}`}>Edit</Button>
+                            </ButtonGroup>
+                        </>
                     )
-                }
-            }
-        },
-        {
-            label: 'Administrator(s)',
-            name: 'administrators',
-            options: {
-                filter: true,
-                sort: true,
-                customBodyRender: value => {
-                    return (
-                        <Chip
-                            icon={<SupervisorAccountTwoToneIcon />}
-                            label={value} 
-                            size="small"
-                            style={{ marginRight: 5, marginBottom: 2 }}
-                        />
-                    )
-                }
-            }
-        },
-        {
-            label: 'Date',
-            name: 'created_at',
-            options: {
-                filter: true,
-                filterOptions: {
-                    renderValue: v => {
-                        return <Moment format="llll">{v}</Moment>
-                    }
-                },
-                sort: true,
-                customBodyRender: value => {
-                    return <Moment format="llll">{value}</Moment>
                 }
             }
         }
@@ -135,20 +108,20 @@ const Roles = ({
             {setLoading ? <Spinner /> : (
                 <MUIDataTable 
                     title={<div>
-                        <h2>Role List</h2>
-                        {/* <Button
+                        <h2>Content List</h2>
+                        <Button
                             variant="contained"
                             color="default"
                             style={{ marginBottom: '10px' }}
                             size="small"
                             startIcon={<AddCircleTwoToneIcon />}
                             component={Link}
-                            to="/role/add"
+                            to="/contents/add"
                         >
                             Add New
-                        </Button> */}
+                        </Button>
                     </div>} 
-                    data={roles} 
+                    data={contents} 
                     columns={columns} 
                     options={options} 
                 />
@@ -157,15 +130,15 @@ const Roles = ({
     )
 }
 
-Roles.propTypes = {
-    roles: PropTypes.array,
+Contents2.propTypes = {
+    contents: PropTypes.array,
     setLoading: PropTypes.bool.isRequired,
-    fetchRole: PropTypes.func.isRequired
+    fetchContents: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-    roles: state.role.roles,
-    setLoading: state.role.setLoading
+    contents: state.content.contents,
+    setLoading: state.content.setLoading
 });
 
-export default connect(mapStateToProps, { fetchRole })(Roles);
+export default connect(mapStateToProps, { fetchContents })(Contents2);

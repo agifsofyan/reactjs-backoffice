@@ -113,7 +113,7 @@ const ListMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary="Contents" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/templates">
                 <ListItemIcon>
                     <ChatTwoToneIcon />
                 </ListItemIcon>
