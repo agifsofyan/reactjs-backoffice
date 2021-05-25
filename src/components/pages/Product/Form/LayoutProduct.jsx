@@ -88,8 +88,8 @@ const LayoutProduct = (props) => {
         images,
         valueAgent,
 
-        media_url,
-        setMediaUrl,
+        media,
+        setMedia,
 
         imageUrl,
         setProductImageUrl,
@@ -149,7 +149,8 @@ const LayoutProduct = (props) => {
 
         const bodyForm = new FormData();
         bodyForm.append('file', e.target.files[0]);
-        const res = await api.post('/uploads/products?sub_path=media_url', bodyForm, {
+        const isVideo = e.target.files[0].type != "image/jpeg"
+        const res = await api.post('/uploads/products?sub_path=media', bodyForm, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -158,8 +159,11 @@ const LayoutProduct = (props) => {
         if (res.data.result) {
             NProgress.done();
 
-            setMediaUrl(res.data.result.url);
-            console.log(media_url);
+            setMedia({
+                isVideo,
+                url: res.data.result.url
+            });
+            console.log(media);
         }
     }
 
@@ -230,7 +234,7 @@ const LayoutProduct = (props) => {
                     onEditorChange={onEditorChange}
                 />
                 <input
-                    accept="image/x-png,image/gif,image/jpeg"
+                    accept="image/*"
                     className={classes.input}
                     id="contained-button-file-image"
                     type="file"
@@ -249,7 +253,7 @@ const LayoutProduct = (props) => {
                     </Button>
                 </label>
                 <input
-                    accept="video/mp4,video/x-m4v,video/*,image/x-png,image/gif,image/jpeg"
+                    accept="video/*,image/*"
                     className={classes.input}
                     id="contained-button-file-media"
                     type="file"
@@ -298,13 +302,13 @@ const LayoutProduct = (props) => {
                     </div>
                 </>
             )}
-            {media_url && (
+            {media && (
                 <>
                     <br />
                     <Typography variant="subtitle2">Header Media</Typography>
                     <video width="50%" height="100%" controls>
-                        <source src={media_url} type="video/mp4" />
-                        <source src={media_url} type="video/ogg" />
+                        <source src={media.url} type="video/mp4" />
+                        <source src={media.url} type="video/ogg" />
                         Your browser does not support the video tag.
                     </video>
                 </>
@@ -444,7 +448,7 @@ const LayoutProduct = (props) => {
                                 onChange={(e) => onHandleSectionChangeContent(i, e)} 
                             />
                             <input
-                                accept="image/x-png,image/gif,image/jpeg"
+                                accept="image/*"
                                 className={classes.input}
                                 id={`contained-button-file-image-section-${i}`}
                                 name={`contained-button-file-image-section-${i}`}

@@ -17,9 +17,9 @@ const Toast = Swal.mixin({
     showConfirmButton: false
 });
 
-export const fetchContents = () => async dispatch => {
+export const fetchContents = (filter = "") => async dispatch => {
     try {
-        const res = await api.get('/contents');
+        const res = await api.get('/contents' + filter);
         dispatch({ type: GET_CONTENTS, payload: res && res.data && res.data.data });
     } catch (error) {
         console.log(`[content.fetchContents] error: ${error}`);
@@ -37,16 +37,21 @@ export const fetchContent = (id) => async dispatch => {
     }
 }
 
-export const addContent = (form, type = 'fulfillment') => async dispatch => {
+export const addContent = (form, type = 'fulfillment', id = "default") => async dispatch => {
+    let res;
+    console.log('idContent 2', id)
     try {
         let _type = type || 'fulfillment';
-        const res = await api.post('/contents/v2/' + _type, JSON.stringify(form));
+        if (id =="default")
+            res = await api.post('/contents/v2/' + _type, JSON.stringify(form));
+        else
+            res = await api.put('/contents/' + id, JSON.stringify(form));
         dispatch({ type: ADD_CONTENT, payload: res.data });
     } catch (error) {
         Toast.fire({
             icon: 'error',
-            title: error.response.data.message[0]
+            title: error && error.response && error.response.data && error.response.data.message
         });
-        dispatch({ type: ADD_CONTENT_FAIL, payload: error.response.data });
+        dispatch({ type: ADD_CONTENT_FAIL, payload: error.response.data.message });
     }
 }

@@ -161,7 +161,7 @@ const Coupons = ({
         filterType: 'dropdown',
         responsive: 'vertical',
         tableBodyHeight: '100%',
-        tableBodyMaxHeight: '400px',
+        tableBodyMaxHeight: '65vh',
         sortOrder: {
             name: 'created_at',
             direction: 'desc'

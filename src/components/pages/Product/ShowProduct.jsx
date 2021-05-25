@@ -116,7 +116,7 @@ const ShowProduct = (props) => {
         image_url,
         bonus,
         agent,
-        media_url,
+        media,
         section,
         feature
     } = props;
@@ -143,7 +143,7 @@ const ShowProduct = (props) => {
         image_url: [],
         bonus: '',
         agent: [],
-        media_url: media_url,
+        media,
         section: '',
         feature: ''
     });
@@ -395,8 +395,11 @@ const ShowProduct = (props) => {
         setForm({ ...form, description: content });
     }
 
-    const setMediaUrl = url => {
-        setForm({ ...form, media_url: url });
+    const setMedia = url => {
+        setForm({ ...form, media: {
+            isVideo: false,
+            url
+        } });
     }
 
     form.image_url = productImageUrl;
@@ -511,8 +514,8 @@ const ShowProduct = (props) => {
                             subheadline={form.subheadline}
                             description={form.description}
                             agents={agents}
-                            media_url={form.media_url}
-                            setMediaUrl={setMediaUrl}
+                            media={form.media}
+                            setMedia={setMedia}
                             valueAgent={productAgent}
                             onProductAgentChange={onProductAgentChange}
                             onChange={onHandleChangeForm}

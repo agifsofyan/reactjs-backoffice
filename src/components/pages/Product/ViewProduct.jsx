@@ -40,7 +40,7 @@ const ViewProduct = ({ product, fetchProduct }) => {
                     image_url={product.image_url}
                     bonus={product.bonus === undefined ? null : product.bonus}
                     agent={product.agent}
-                    media_url={product.media_url}
+                    media={product.media}
                     section={product.section}
                     feature={product.feature}
                 />)}    

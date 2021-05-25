@@ -116,7 +116,7 @@ const EditProduct = (props) => {
         image_url,
         bonus,
         agent,
-        media_url,
+        media,
         section,
         feature
     } = props;
@@ -143,7 +143,7 @@ const EditProduct = (props) => {
         image_url: [],
         bonus: '',
         agent: [],
-        media_url: media_url,
+        media: media,
         section: '',
         feature: ''
     });
@@ -224,12 +224,12 @@ const EditProduct = (props) => {
 
     // Bump
     const [productBump, setProductBump] = React.useState({
-        bump_name: bump.bump_name || '',
-        bump_price: bump.bump_price || '',
-        bump_image: bump.bump_image || '',
-        bump_weight: bump.bump_weight || '',
-        bump_heading: bump.bump_heading || '',
-        bump_desc: bump.bump_desc || ''
+        bump_name: bump && bump.bump_name || '',
+        bump_price: bump && bump.bump_price || '',
+        bump_image: bump && bump.bump_image || '',
+        bump_weight: bump && bump.bump_weight || '',
+        bump_heading: bump && bump.bump_heading || '',
+        bump_desc: bump && bump.bump_desc || ''
     });
 
     // Ecommerce
@@ -389,8 +389,8 @@ const EditProduct = (props) => {
         setForm({ ...form, description: content });
     }
 
-    const setMediaUrl = url => {
-        setForm({ ...form, media_url: url });
+    const setMedia = media => {
+        setForm({ ...form, media});
     }
 
     form.image_url = productImageUrl;
@@ -426,6 +426,13 @@ const EditProduct = (props) => {
             if (newForm[key] instanceof Array && newForm[key].length === 0) {
                 delete newForm[key];
             }
+            if((newForm[key] instanceof Array && newForm[key].length > 0 && newForm[key][0].bump_name == "")
+            || (newForm[key] instanceof Array && newForm[key].length > 0 && newForm[key][0].title == ""))
+            newForm[key] = []
+
+            if((newForm[key] instanceof Object && newForm[key].title == "")
+                || (newForm[key] instanceof Object && newForm[key].stock == 0))
+            newForm[key] = {}
         }
 
         // if (form.type !== 'ecommerce') {
@@ -512,8 +519,8 @@ const EditProduct = (props) => {
                             subheadline={form.subheadline}
                             description={form.description}
                             agents={agents}
-                            media_url={form.media_url}
-                            setMediaUrl={setMediaUrl}
+                            media={form.media}
+                            setMedia={setMedia}
                             valueAgent={productAgent}
                             onProductAgentChange={onProductAgentChange}
                             onChange={onHandleChangeForm}

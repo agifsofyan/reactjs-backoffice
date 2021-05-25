@@ -109,6 +109,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
     const [openDialog, setOpenDialog] = React.useState(false);
 
     React.useEffect(() => {
+        console.log('fetchOrder', id)
         fetchOrder(id);
         // eslint-disable-next-line
     },[]);
@@ -148,7 +149,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                 id="phone"
                                 label="Phone Number"
                                 type="number"
-                                value={phone_number === null ? 0 : phone_number} 
+                                value={phone_number ? 0 : phone_number} 
                                 disabled
                             />
                             <TextField
@@ -188,7 +189,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
 
     return (
         <React.Fragment>
-            {order === null || order._id !== id ? <Spinner /> : (
+            {!(order || (order && order['_id'] && order['_id']  !== id)) ? <Spinner /> : (
                 <>
                 <h3>Detail Order</h3>
                 <Button
@@ -219,12 +220,11 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                             aria-label="tab-panel"
                             centered
                         >
-                            <Tab label="Payment" {...a11yProps(0)} />
-                            <Tab label="Coupon" {...a11yProps(1)} />
-                            <Tab label="Shipment" {...a11yProps(2)} />
-                            <Tab label="Product" {...a11yProps(3)} />
-                            <Tab label="Buyer" {...a11yProps(4)} />
-                            <Tab label="Follow Up" {...a11yProps(5)} />
+                            <Tab label="Buyer" {...a11yProps(0)} />
+                            <Tab label="Product" {...a11yProps(1)} />
+                            <Tab label="Coupon" {...a11yProps(2)} />
+                            <Tab label="Follow Up" {...a11yProps(3)} />
+                            <Tab label="Payment" {...a11yProps(4)} />
                         </Tabs>
                     </Paper>
                     <SwipeableViews
@@ -233,55 +233,26 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                         onChangeIndex={onHandleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir={theme.direction}>
-                            {/* Payment */}
-                            {order.payment === undefined ? (
+                            {/* Buyer */}
+                            {order.user_info === undefined ? (
                                 <Container>
-                                    <img src={NoDataAmico} width="40%" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
+                                    <img src={NoDataAmico} width="350px" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
                                 </Container>
                             ) : (
                                 <>
                                     <List>
                                         <ListItem>
-                                            <ListItemText primary="External ID (Invoice)" secondary={order.payment.external_id} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem button onClick={handlePaymentMethodClick}>
-                                            <ListItemText primary="Method" />
-                                            {openPaymentMethod ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
-                                        </ListItem>
-                                        <Collapse in={openPaymentMethod} timeout="auto" unmountOnExit>
-                                            <List component="div" disablePadding>
-                                                <ListItemText className={classes.nested} primary="Name" secondary={order.payment.method.name} />
-                                                <ListItemText className={classes.nested} primary="Info" secondary={order.payment.method.info} />
-                                                <ListItemText className={classes.nested} primary="Status" secondary={order.payment.method.isActive ? 'Active' : 'Inactive'} />
-                                                <ListItemText className={classes.nested} primary={<img src={order.payment.method.icon} width="10%" height="20%" />} />
-                                            </List>
-                                        </Collapse>
-                                        <Divider />
-                                        {order.payment.invoice_url !== undefined && (
-                                            <>
-                                                <ListItem button onClick={() => onInvoiceClick(order.payment.invoice_url)}>
-                                                    <ListItemText primary="Invoice URL" />
-                                                </ListItem>
-                                                <Divider />
-                                            </>
-                                        )}
-                                        <ListItem>
-                                            <ListItemText primary="Payment Code" secondary={order.payment.payment_code === null ? 'None' : order.payment.payment_code} />
+                                            <ListItemText primary="Name" secondary={order.user_info.name} />
                                         </ListItem>
                                         <Divider />
                                         <ListItem>
-                                            <ListItemText primary="Pay UID" secondary={order.payment.pay_uid === null ? 'None' : order.payment.pay_uid} />
+                                            <ListItemText primary="Email" secondary={order.user_info.email} />
                                         </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Phone Number" secondary={order.payment.phone_number === null ? 'None' : order.payment.phone_number} />
-                                        </ListItem>
-                                        {order.payment.callback_id !== null && (
+                                        {order.user_info.phone_number !== undefined && (
                                             <>
                                                 <Divider />
                                                 <ListItem>
-                                                    <ListItemText primary="Callback ID" secondary={order.payment.callback_id} />
+                                                    <ListItemText primary="Phone Number" secondary={order.user_info.phone_number} />
                                                 </ListItem>
                                             </>
                                         )}
@@ -290,112 +261,6 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                             )}
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
-                            {/* Coupon */}
-                            {order.coupon === undefined ? (
-                                <Container>
-                                    <img src={NoDataAmico} width="350px" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
-                                </Container>
-                            ) : (
-                                <>
-                                    <List>
-                                        <ListItem>
-                                            <ListItemText primary="Name" secondary={order.coupon.name} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Value" secondary={order.coupon.value} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Max Discount" secondary={<NumberFormat value={order.coupon.max_discount} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Type" secondary={order.coupon.type} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Code" secondary={order.coupon.code} />
-                                        </ListItem>
-                                    </List>
-                                </>
-                            )}
-                        </TabPanel>
-                        <TabPanel value={value} index={2} dir={theme.direction}>
-                            {/* Shipment */}
-                            {order.shipment === undefined ? (
-                                <Container>
-                                    <img src={NoDataAmico} width="350px" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
-                                </Container>
-                            ) : (
-                                <>
-                                    <List>
-                                        <ListItem>
-                                            <ListItemText primary="Service Type" secondary={order.shipment.shipment_info === null ? 'None' : order.shipment.shipment_info.service_type} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Service Level" secondary={order.shipment.shipment_info === null ? 'None' : order.shipment.shipment_info.service_level} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Tracking Number" secondary={order.shipment.shipment_info === null ? 'None' : order.shipment.shipment_info.requested_tracking_number} />
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            <ListItemText primary="Price" secondary={<NumberFormat value={order.shipment.price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />} />
-                                        </ListItem>
-                                        {order.shipment.shipment_info !== null && (
-                                            <>
-                                                <Divider />
-                                                <ListItem button onClick={handleShipmentInfoClick}>
-                                                    <ListItemText primary="Shipment Info" />
-                                                    {openShipmentInfo ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
-                                                </ListItem>
-                                                <Collapse in={openShipmentInfo} timeout="auto" unmountOnExit>
-                                                    {order.shipment.shipment_info.to === null || order.shipment.shipment_info.to === undefined ? (
-                                                        <Container>
-                                                            <img src={NoDataAmico} width="350px" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
-                                                        </Container>
-                                                    ) : (
-                                                        <List component="div" disablePadding>
-                                                            <ListItemText className={classes.nested} primary="Name" secondary={order.shipment.shipment_info.to.name} />
-                                                            <ListItemText className={classes.nested} primary="Phone Number" secondary={order.shipment.shipment_info.to.phone_number} />
-                                                            <ListItemText className={classes.nested} primary="Email" secondary={order.shipment.shipment_info.to.email} />
-                                                            <ListItem button onClick={handleShipmentInfoAddressClick}>
-                                                                <ListItemText primary="Address Info" />
-                                                                {openShipmentInfoAddress ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
-                                                            </ListItem>
-                                                            <Collapse in={openShipmentInfoAddress} timeout="auto" unmountOnExit>
-                                                                <List component="div" disablePadding>
-                                                                    <ListItemText className={classes.nested} primary="Type" secondary={order.shipment.shipment_info.to.address.address_type} />
-                                                                    <ListItemText className={classes.nested} primary="Country" secondary={order.shipment.shipment_info.to.address.country} />
-                                                                    <ListItemText className={classes.nested} primary="Address" secondary={`${order.shipment.shipment_info.to.address.address1}, Kel. ${order.shipment.shipment_info.to.address.kelurahan}, Kec. ${order.shipment.shipment_info.to.address.kecamatan}, Kota ${order.shipment.shipment_info.to.address.city}, ${order.shipment.shipment_info.to.address.province}`} />
-                                                                    <ListItemText className={classes.nested} primary="Postal Code" secondary={order.shipment.shipment_info.to.address.postcode} />
-                                                                </List>
-                                                            </Collapse>
-                                                            <Divider />
-                                                            <ListItem button onClick={handleShipmentInfoParcelJobClick}>
-                                                                <ListItemText primary="Parcel Job" />
-                                                                {openShipmentInfoParcelJob ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
-                                                            </ListItem>
-                                                            <Collapse in={openShipmentInfoParcelJob} timeout="auto" unmountOnExit>
-                                                                <List component="div" disablePadding>
-                                                                    <ListItemText className={classes.nested} primary="Pickup Service Level" secondary={order.shipment.shipment_info.parcel_job.pickup_service_level} />
-                                                                    <ListItemText className={classes.nested} primary="Pickup Date" secondary={<Moment format="llll">{order.shipment.shipment_info.parcel_job.pickup_date}</Moment>} />
-                                                                    <ListItemText className={classes.nested} primary="Delivery Date" secondary={<Moment format="llll">{order.shipment.shipment_info.parcel_job.delivery_start_date}</Moment>} />
-                                                                </List>
-                                                            </Collapse>
-                                                        </List>
-                                                    )}
-                                                </Collapse>
-                                            </>
-                                        )}
-                                    </List>
-                                </>
-                            )}
-                        </TabPanel>
-                        <TabPanel value={value} index={3} dir={theme.direction}>
                             {/* Product */}
                             {order.items.map((item, i) => {
                                 return (
@@ -433,7 +298,7 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                             <ListItemText className={classes.nested} primary="Time Period" secondary={item.product_info.time_period > 1 ? `${item.product_info.time_period} months` : `${item.product_info.time_period} month`} />
                                             <ListItemText className={classes.nested} primary="Price" secondary={<NumberFormat value={item.product_info.price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />} />
                                             <ListItemText className={classes.nested} primary="Sale Price" secondary={<NumberFormat value={item.product_info.sale_price} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />} />
-                                            {item.product_info.bump !== null && (
+                                            {item.product_info && item.product_info.bump && item.product_info.bump.length > 0 && (
                                                 <>
                                                     <ListItemText className={classes.nested} primary="Bump" />
                                                     <ListItemText className={classes.nested2} primary="Name" secondary={item.product_info.bump[0].bump_name} />
@@ -449,9 +314,9 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                 )
                             })}
                         </TabPanel>
-                        <TabPanel value={value} index={4} dir={theme.direction}>
-                            {/* Buyer */}
-                            {order.user_info === undefined ? (
+                        <TabPanel value={value} index={2} dir={theme.direction}>
+                            {/* Coupon */}
+                            {order.coupon === undefined ? (
                                 <Container>
                                     <img src={NoDataAmico} width="350px" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
                                 </Container>
@@ -459,25 +324,29 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                 <>
                                     <List>
                                         <ListItem>
-                                            <ListItemText primary="Name" secondary={order.user_info.name} />
+                                            <ListItemText primary="Name" secondary={order.coupon.name} />
                                         </ListItem>
                                         <Divider />
                                         <ListItem>
-                                            <ListItemText primary="Email" secondary={order.user_info.email} />
+                                            <ListItemText primary="Value" secondary={order.coupon.value} />
                                         </ListItem>
-                                        {order.user_info.phone_number !== undefined && (
-                                            <>
-                                                <Divider />
-                                                <ListItem>
-                                                    <ListItemText primary="Phone Number" secondary={order.user_info.phone_number} />
-                                                </ListItem>
-                                            </>
-                                        )}
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Max Discount" secondary={<NumberFormat value={order.coupon.max_discount} displayType={'text'} thousandSeparator={true} prefix={'Rp'} />} />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Type" secondary={order.coupon.type} />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Code" secondary={order.coupon.code} />
+                                        </ListItem>
                                     </List>
                                 </>
                             )}
                         </TabPanel>
-                        <TabPanel value={value} index={5} dir={theme.direction}>
+                        <TabPanel value={value} index={3} dir={theme.direction}>
                             {/* Follow Up */}
                             {/* {followups.map((item, i) => (
                                 <>
@@ -493,7 +362,64 @@ const DetailOrder = ({ order, followups, fetchOrder, fetchFollowUps }) => {
                                 </>
                             ))} */}
                         </TabPanel>
-                    </SwipeableViews>
+                        <TabPanel value={value} index={4} dir={theme.direction}>
+                            {/* Payment */}
+                            {order && order.payment ? (
+                                <Container>
+                                    <img src={NoDataAmico} width="40%" height="100%" style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }}/>
+                                </Container>
+                            ) : (
+                                <>
+                                    <List>
+                                        <ListItem>
+                                            <ListItemText primary="External ID (Invoice)" secondary={order && order.payment && order.payment.external_id} />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem button onClick={handlePaymentMethodClick}>
+                                            <ListItemText primary="Method" />
+                                            {openPaymentMethod ? <ExpandLessTwoToneIcon /> : <ExpandMoreTwoToneIcon />}
+                                        </ListItem>
+                                        <Collapse in={openPaymentMethod} timeout="auto" unmountOnExit>
+                                            <List component="div" disablePadding>
+                                                <ListItemText className={classes.nested} primary="Name" secondary={order && order.payment && order.payment.method.name} />
+                                                <ListItemText className={classes.nested} primary="Info" secondary={order && order.payment &&order.payment.method.info} />
+                                                <ListItemText className={classes.nested} primary="Status" secondary={order && order.payment &&order.payment.method.isActive ? 'Active' : 'Inactive'} />
+                                                <ListItemText className={classes.nested} primary={<img src={order && order.payment &&order.payment.method.icon} width="10%" height="20%" />} />
+                                            </List>
+                                        </Collapse>
+                                        <Divider />
+                                        {/* {order.payment.invoice_url !== undefined && (
+                                            <>
+                                                <ListItem button onClick={() => onInvoiceClick(order && order.payment &&order.payment.invoice_url)}>
+                                                    <ListItemText primary="Invoice URL" />
+                                                </ListItem>
+                                                <Divider />
+                                            </>
+                                        )} */}
+                                        <ListItem>
+                                            <ListItemText primary="Payment Code" secondary={order && order.payment &&order.payment.payment_code ? 'None' : order && order.payment &&order.payment.payment_code} />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Pay UID" secondary={order && order.payment &&order.payment.pay_uid ? 'None' : order && order.payment && order.payment.pay_uid} />
+                                        </ListItem>
+                                        <Divider />
+                                        <ListItem>
+                                            <ListItemText primary="Phone Number" secondary={order && order.payment && order.payment.phone_number ? 'None' : order && order.payment && order.payment.phone_number} />
+                                        </ListItem>
+                                        {/* {order.payment.callback_id !== null && (
+                                            <>
+                                                <Divider />
+                                                <ListItem>
+                                                    <ListItemText primary="Callback ID" secondary={order && order.payment && order.payment.callback_id} />
+                                                </ListItem>
+                                            </>
+                                        )} */}
+                                    </List>
+                                </>
+                            )}
+                        </TabPanel>
+                       </SwipeableViews>
                 </div>
                 </>
             )}

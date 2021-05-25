@@ -110,7 +110,7 @@ const Products = ({
                             />
                             <br />
                             <Chip
-                                label={`${value.sales_price}`} 
+                                label={`${value.sale_price}`} 
                                 size="small"
                                 style={{ marginRight: 5, marginBottom: 2}}
                             />
@@ -182,7 +182,7 @@ const Products = ({
         filterType: 'dropdown',
         responsive: 'vertical',
         tableBodyHeight: '100%',
-        tableBodyMaxHeight: '400px',
+        tableBodyMaxHeight: '65vh',
         sortOrder: {
             name: 'created_at',
             direction: 'desc'

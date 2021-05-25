@@ -193,7 +193,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Product Type"
-                defaultInputValue={type}
+                // defaultInputValue={type}
                 value={type}
                 options={productTypes}
                 onChange={onProductTypeChange}
@@ -221,7 +221,7 @@ const DetailProduct = (props) => {
                     <Select
                         className={classes.select}
                         placeholder="Select Type Shipping"
-                        defaultInputValue={setLabel(productTypeShipping, is_reguler)}
+                        // defaultInputValue={setLabel(productTypeShipping, is_reguler)}
                         value={setValue(productTypeShipping, is_reguler)}
                         options={productTypeShipping}
                         onChange={onHandleIsReguler}
@@ -243,7 +243,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Visibility"
-                defaultInputValue={visibility}
+                // defaultInputValue={visibility}
                 value={visibility}
                 options={productVisibilities}
                 onChange={onProductVisibilityChange}
@@ -252,7 +252,7 @@ const DetailProduct = (props) => {
             <Select
                 className={classes.select}
                 placeholder="Select Sale Method"
-                defaultInputValue={sale_method}
+                // defaultInputValue={sale_method}
                 value={sale_method}
                 options={productSaleMethods}
                 onChange={onProductSaleMethodChange}

@@ -14,20 +14,20 @@ import api from '../utils/api';
 export const fetchTopic = () => async dispatch => {
     try {
         const res = await api.get('/topics');
-        dispatch({ type: GET_TOPICS, payload: res.data.data });
+        dispatch({ type: GET_TOPICS, payload: res && res.data && res.data.data });
     } catch (error) {
         console.log(`[topic.fetchTopic] error: ${error}`);
-        dispatch({ type: GET_TOPICS_FAIL, payload: error.response.data });
+        dispatch({ type: GET_TOPICS_FAIL, payload: error && error.response && error.response.data });
     }
 }
 
 export const fetchTopicCount = () => async dispatch => {
     try {
         const res = await api.get('/topics/list/count');
-        dispatch({ type: GET_TOPICS_COUNT, payload: res.data.data });
+        dispatch({ type: GET_TOPICS_COUNT, payload: res && res.data && res.data.data });
     } catch (error) {
         console.log(`[topic.fetchTopicCount] error: ${error}`);
-        dispatch({ type: GET_TOPICS_COUNT_FAIL, payload: error.response.data });
+        dispatch({ type: GET_TOPICS_COUNT_FAIL, payload: error && error.response && error.response.data });
     }
 }
 
@@ -41,7 +41,7 @@ export const deleteOneTopic = (id) => async dispatch => {
         dispatch({ type: DELETE_TOPIC, payload: res.data });
     } catch (error) {
         console.log(`[topic.deleteOneTopic] error: ${error}`);
-        dispatch({ type: DELETE_TOPIC_FAIL, payload: error.response.data });
+        dispatch({ type: DELETE_TOPIC_FAIL, payload: error && error.response && error.response.data });
     }
 }
 
@@ -52,6 +52,6 @@ export const deleteManyTopic = (ids) => async dispatch => {
         dispatch({ type: DELETE_TOPIC_MANY, payload: res.data });
     } catch (error) {
         console.log(`[topic.deleteManyTopic] error: ${error}`);
-        dispatch({ type: DELETE_TOPIC_MANY_FAIL, payload: error.response.data });
+        dispatch({ type: DELETE_TOPIC_MANY_FAIL, payload: error && error.response && error.response.data });
     }
 }

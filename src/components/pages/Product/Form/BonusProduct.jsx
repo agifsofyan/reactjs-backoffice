@@ -133,7 +133,7 @@ const BonusProduct = (props) => {
                     onChange={onBonusChange} 
                 />
                 <input
-                    accept="image/x-png,image/gif,image/jpeg"
+                    accept="image/*"
                     className={classes.input}
                     id="contained-button-file-image-bonus"
                     type="file"

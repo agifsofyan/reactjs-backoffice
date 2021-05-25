@@ -36,7 +36,8 @@ import Moment from 'react-moment';
 
 import MUIDataTable from 'mui-datatables';
 
-import { fetchOrders, fetchFollowUps, postFollowUp } from '../../../actions/order';
+import { fetchOrders, fetchFollowUps, postFollowUp, putOrders, putOrdersAddBonus } from '../../../actions/order';
+import { fetchProducts } from '../../../actions/product';
 
 import Spinner from '../../layouts/Spinner';
 
@@ -51,7 +52,7 @@ let AllUps = []
 let ObjUp = {}
 let firstLoad = true
 let message = ""
-const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, postFollowUp }) => {
+const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, postFollowUp, putOrders, putOrdersAddBonus, products, fetchProducts}) => {
 
     // if((followups &&  AllUps.indexOf(followups.data) === -1) || (followups && followups.data['order'] == open && open['id'])) {
     //     // AllUps.(followups.data);
@@ -66,8 +67,46 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
 
     React.useEffect(() => {
         fetchOrders();
+        fetchProducts('?fields=type&value=bonus');
+        
         // eslint-disable-next-line
     }, []);
+
+    React.useEffect(() => {
+        pay.open && orders && pay && orders.map(obj=> {
+            if(obj && obj.invoice && pay.obj.invoice && obj.invoice == pay.obj.invoice)
+                setPay({...pay, obj})
+        })
+    }, [orders]);
+
+    React.useEffect(() => {
+        let val = []
+        products &&  products.map(obj=> {
+            let value = obj['_id']
+            let label = obj.name
+            val.push({value, label})
+        })
+        setProductBonus(val)
+    }, [products]);
+
+    const [productBonus, setProductBonus] = React.useState([]);
+    const [valueProductBonus, setValueProductBonus] = React.useState([]);
+    const [ubahStatus, setUbahStatus] = React.useState({});
+
+    let ubah_unpaid = [
+        { value: 'paid', label: 'Paid' },
+        { value: 'pending', label: 'Pending' }
+      ];
+
+    let ubah_paid = [
+        { value: 'refund', label: 'Refund' },
+        { value: 'unpaid', label: 'Unpaid' }
+    ];
+
+    let ubah_pending = [
+        { value: 'unpaid', label: 'Unpaid' },
+        { value: 'paid', label: 'Paid' }
+    ];
 
     const columns = [
         {
@@ -129,10 +168,12 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                 filter: false,
                 sort: false,
                 customBodyRender: value => {
+                    let name = ""
+                    value.map(e=>{name += e.product_info.name + ", "})
+                    name = name && name.substring(0, name.length-2)
                     return (
-                        value[0].product_info.name
+                        name
                     )
-                    // return <span>{v && v.length}</span>
                 },
             }
         },
@@ -243,18 +284,24 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                 sort: false,
                 empty: true,
                 customBodyRender: (value, tableMeta, updateValue) => {
+                    let isBayar = !value.payment || (value.payment && (value.payment.status != "UNPAID" || value.payment.method.vendor == "Dana") || (!value.transfer_evidence || (value.transfer_evidence && value.transfer_evidence.is_confirmed != false)) )
+                    let isBonus = value.status == "PAID"
                     return (
                         <>
                             <ButtonGroup size="small" aria-label="small outlined button group">
-                                <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Edit</Button>
+                                <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Detail</Button>
                             </ButtonGroup>
                             <br/>
-                            <ButtonGroup size="small" aria-label="small outlined button group">
+                            {/* <ButtonGroup size="small" aria-label="small outlined button group">
                                 <Button component={Link} to={`/order/${tableMeta.rowData[0]}/detail`}>Delete</Button>
                             </ButtonGroup>
+                            <br/> */}
+                            <ButtonGroup size="small" aria-label="small outlined button group">
+                                <Button component={Link} onClick={() => handleClickOpenPay(value, tableMeta.rowIndex)}>Bayar</Button>
+                            </ButtonGroup>
                             <br/>
                             <ButtonGroup size="small" aria-label="small outlined button group">
-                                <Button component={Link} onClick={() => handleClickOpenPay(value)}>Bayar</Button>
+                                <Button component={Link} onClick={() => handleClickOpenShipping(value, tableMeta.rowData[2]['_id'])} disabled={!isBonus}>Bonus</Button>
                             </ButtonGroup>
                         </>
                     )
@@ -278,7 +325,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
         tableBodyHeight: '100%',
         tableBodyWidth: '100%',
         maxWidth: "xl",
-        tableBodyMaxHeight: '400px',
+        tableBodyMaxHeight: '65vh',
         sortOrder: {
             name: 'create_date',
             direction: 'desc'
@@ -295,6 +342,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
         let hp = obj.user_info.whatsapp || ''
         if(hp && hp.substring(0, 1) == 0)
             hp = hp.substring(1, hp.length)
+        message = message.replace('{nama}', name)
 
         setOpen({...open, open: true, nomor, name, hp: hp, id: obj['_id'], warna, message});
     };
@@ -306,25 +354,40 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
         condition && condition == "up" && window.open('http://wa.me/' + open.hp + '/?text=' + message, '_blank');
         condition && condition == "up" && warna == "#FF9800" && postFollowUp(id, message)
         condition && condition == "up" && warna == "#FF9800" && fetchOrders()
-        
     };
 
-    const handleClickOpenPay = (obj) => {
-        setPay({...pay, open: true, obj});
+    const handleClickOpenPay = (obj,idx) => {
+        console.log('idx', idx)
+        setPay({...pay, open: true, idx, obj});
     };
   
-    const handleClosePay = key => {
-        setPay({...pay, open: false});
+    const handleClosePay = (key, id) => {
+        key && key == "close" && setPay({...pay, open: false});
 
-        key && key == "bayar" && handleClickOpenShipping();
+        key && key == "bayar" && putOrders(id);
     };
 
-    const handleClickOpenShipping = (obj) => {
-        setShipping({...shipping, open: true, obj});
+    const handleClickOpenShipping = (obj, user_id) => {
+        setShipping({...shipping, open: true, obj, user_id});
     };
+
+    const onProductBonusChange = e => {
+        setValueProductBonus(e)
+    }
   
-    const handleCloseShipping = () => {
-        setShipping({...shipping, open: false});
+    const handleCloseShipping = (key) => {
+        if(key == "save"){
+            const product_id = []
+            const user_id = shipping.user_id
+
+            valueProductBonus.map(e=>product_id.push(e.value))
+
+            const invoice_number = shipping.obj.invoice
+            const body = {product_id, user_id}
+            putOrdersAddBonus(invoice_number, body)
+        }
+        setShipping({open: false});
+        setValueProductBonus([]);
     };
 
     const DialogContent = withStyles((theme) => ({
@@ -383,7 +446,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                             <tr>
                                 <td>Invoice Number</td>
                                 <td>:</td>
-                                <td>{pay && pay.obj && pay.obj['_id'] || ''}</td>
+                                <td>{pay && pay.obj && pay.obj.invoice || ''}</td>
                             </tr>
                             <tr>
                                 <td>Order Date</td>
@@ -395,6 +458,7 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                                 <td>:</td>
                                 <td>{pay && pay.obj && pay.obj.status || ''}</td>
                             </tr>
+                            {/* {pay && pay.obj && 
                             <tr>
                                 <td>Ubah Status</td>
                                 <td>:</td>
@@ -402,16 +466,13 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                                     <Select
                                         className={classes.select}
                                         placeholder="Ubah Status"
-                                        // options={topics}
-                                        // value={valueTopic}
-                                        // getOptionValue={(option) => option._id}
-                                        // getOptionLabel={(option) => option.name}
-                                        // onChange={onProductTopicChange}
-                                        isClearable
-                                        isMulti
+                                        options={pay.obj.status == 'PAID' ? ubah_paid : pay.obj.status == 'UNPAID' ? ubah_unpaid : pay.obj.status == 'PENDING' ? ubah_pending : []}
+                                        value={ubahStatus}
+                                        onChange={setUbahStatus}
                                     />
                                 </td>
                             </tr>
+                            } */}
                         </table>
                     </Typography>
                     <br />
@@ -486,30 +547,34 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                         </TableContainer>
                     </Typography>}
                     <br />
-                    <Typography gutterBottom>
-                    Data Pembayaran
-                    </Typography>
-                    <Typography gutterBottom>
-                        <table>
-                            <tr>
-                                <td>Payment</td>
-                                <td>:</td>
-                                <td><img src="https://laruno2020.s3.ap-southeast-1.amazonaws.com/ASSETS/payment_method/dana.png" style={{width: '70px',height: '21px',objectFit: 'contain', margin: '0 0 0 10px'}} /></td>
-                            </tr>
-                            {pay && pay.obj && pay.obj.status &&
-                            <tr>
-                                <td>Status</td>
-                                <td>:</td>
-                                <td>{pay.obj.status == 'PAID' ? 'Paid' : pay.obj.status}</td>
-                            </tr>}
-                        </table>
-                    </Typography>
+                    {pay && pay.obj && pay.obj.payment && 
+                        <>
+                        <Typography gutterBottom>
+                        Data Pembayaran
+                        </Typography>
+                        <Typography gutterBottom>
+                            <table>
+                                {pay.obj.payment.method.vendor == "Dana" ? 
+                                <tr>
+                                    <td>Payment Dompet Digital</td>
+                                    <td style={{paddingTop: '5px'}}><img src={pay.obj.payment.method.icon} style={{width: '70px',height: '21px',objectFit: 'contain', margin: '0 0 0 10px'}} /></td>
+                                </tr>
+                                :
+                                <tr>
+                                    <td>Payment Bank Transfer</td>
+                                    <td style={{paddingTop: '5px'}}><img src={pay.obj.payment.method.icon} style={{width: '70px',height: '21px',objectFit: 'contain', margin: '0 0 0 10px'}} /></td>
+                                </tr>
+                                }
+                            </table>
+                        </Typography>
+                        </>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={() => handleClosePay('close')} color="primary">
                     Close
                     </Button>
-                    <Button autoFocus onClick={() => handleClosePay('bayar')} color="primary">
+                    <Button disabled={pay && pay.obj && pay.obj.status == "PAID"} autoFocus onClick={() => handleClosePay('bayar', pay && pay.obj && pay.obj['_id'] || '')} color="primary">
                     Terima Pembayaran
                     </Button>
                 </DialogActions>
@@ -523,41 +588,23 @@ const Orders = ({ orders, followups, setLoading, fetchOrders, fetchFollowUps, po
                     <Typography gutterBottom>
                         <Select
                             className={classes.select}
-                            placeholder="Select Tracking"
-                            // options={topics}
-                            // value={valueTopic}
-                            // getOptionValue={(option) => option._id}
-                            // getOptionLabel={(option) => option.name}
-                            // onChange={onProductTopicChange}
-                            isClearable
-                            isMulti
-                        />
-                    </Typography>
-                    <Typography gutterBottom>
-                        <Select
-                            className={classes.select}
                             placeholder="Select Bonus"
-                            // options={topics}
-                            // value={valueTopic}
-                            // getOptionValue={(option) => option._id}
-                            // getOptionLabel={(option) => option.name}
-                            // onChange={onProductTopicChange}
+                            options={productBonus}
+                            value={valueProductBonus}
+                            getOptionValue={(option) => option.value}
+                            getOptionLabel={(option) => option.label}
+                            onChange={onProductBonusChange}
                             isClearable
                             isMulti
                         />
-                    <Button autoFocus onClick={handleCloseShipping} color="primary">
-                    Save
-                    </Button>
                     </Typography>
+                    <br /><br /><br />
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={handleCloseShipping} color="primary">
+                    <Button autoFocus onClick={e => handleCloseShipping('close')} color="primary">
                     Close
                     </Button>
-                    <Button autoFocus onClick={handleCloseShipping} color="primary">
-                    Delete
-                    </Button>
-                    <Button autoFocus onClick={handleCloseShipping} color="primary">
+                    <Button autoFocus onClick={e => handleCloseShipping('save')} color="primary">
                     Save
                     </Button>
                 </DialogActions>
@@ -584,10 +631,11 @@ Orders.propTypes = {
 }
 
 const mapStateToProps = state => ({
+    products: state.product.products,
     orders: state.order.orders,
     followups: state.order.followups,
     setLoading: state.order.setLoading
 });
 
-export default connect(mapStateToProps, { fetchOrders, fetchFollowUps, postFollowUp })(Orders);
+export default connect(mapStateToProps, { fetchOrders, fetchFollowUps, postFollowUp, putOrders, putOrdersAddBonus, fetchProducts })(Orders);
 

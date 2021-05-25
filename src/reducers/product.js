@@ -49,7 +49,7 @@ export default function (state = INITIAL_STATE, action) {
                 // Price
                 item.prices = {}
                 item.prices.price = item.price ? item.price.format() : 0
-                item.prices.sales_price = item.sales_price ? item.sales_price : 0
+                item.prices.sale_price = item.sale_price ? item.sale_price.format() : 0
 
                 // Status
                 item.status = {}

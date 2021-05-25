@@ -167,7 +167,7 @@ const BumpProduct = (props) => {
                     onChange={onBumpChange} 
                 />
                 <input
-                    accept="image/x-png,image/gif,image/jpeg"
+                    accept="image/*"
                     className={classes.input}
                     id="contained-button-file-image-bump"
                     type="file"

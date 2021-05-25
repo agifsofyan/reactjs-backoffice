@@ -20,9 +20,11 @@ import DetailOrder from '../components/pages/Order/DetailOrder';
 
 import Topics from '../components/pages/Topic/Topics';
 import Roles from '../components/pages/Role/Roles';
-import AddContent from '../components/pages/Content/AddContent';
-import SubFulfillmentContent from '../components/pages/Content/Form/SubFulfillmentContent';
 import Contents from '../components/pages/Content/Contents';
+import Templates from '../components/pages/Template/Templates';
+import AddBlogContents from '../components/pages/Content/Form/AddBlogContent';
+import SubFulfillmentContent from '../components/pages/Content/Form/SubFulfillmentContent';
+import FulfillmentContent from '../components/pages/Content/Form/FulfillmentContent';
 import Admins from '../components/pages/Admin/Admins';
 import Coupons from '../components/pages/Coupon/Coupons';
 import Payments from '../components/pages/Payment/Payments';
@@ -80,12 +82,14 @@ const Routes = () => {
                         <PrivateRoute exact path="/topics" component={Topics} />
                         <PrivateRoute exact path="/roles" component={Roles} />
                         <PrivateRoute exact path="/contents" component={Contents} />
-                        <PrivateRoute exact path="/contents/add" component={AddContent} />
-                        <PrivateRoute exact path="/contents/add/:id" component={SubFulfillmentContent} />
-                        <PrivateRoute exact path="/contents/edit/:id" component={AddContent} />
+                        <PrivateRoute exact path="/contents/blog" component={AddBlogContents} />
+                        <PrivateRoute exact path="/contents/blog/:id" component={AddBlogContents} />
+                        <PrivateRoute exact path="/contents/fulfillment/" component={FulfillmentContent} />
+                        <PrivateRoute exact path="/contents/fulfillment/:id" component={SubFulfillmentContent} />
                         <PrivateRoute exact path="/admins" component={Admins} />
                         <PrivateRoute exact path="/coupons" component={Coupons} />
                         <PrivateRoute exact path="/payments" component={Payments} />
+                        <PrivateRoute exact path="/templates" component={Templates} />
                         <Box pt={4}>
                             <Footer />
                         </Box>
