@@ -24,8 +24,8 @@ export const login = (data) => async dispatch => {
         dispatch({ type: LOGIN_SUCCESS, payload: res && res.data && res.data.result });
         dispatch(me());
     } catch (error) {
-        console.log(`[auth.login] error: ${error.response.data.message}`);
-        dispatch({ type: LOGIN_FAIL, payload: error.response.data });
+        console.log(`[auth.login] error: ${error && error.response && error.response.data && error.response.data.message}`);
+        dispatch({ type: LOGIN_FAIL, payload: error && error.response && error.response.data});
     }
 }
 

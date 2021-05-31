@@ -37,6 +37,17 @@ export const fetchContent = (id) => async dispatch => {
     }
 }
 
+
+export const fetchContentByProductSlug = (slug) => async dispatch => {
+    try {
+        const res = await api.get(`contents/v2/fulfillment/${slug}/detail`);
+        dispatch({ type: GET_CONTENT_DETAIL, payload: res.data });
+    } catch (error) {
+        console.log(`[content.fetchContent] error: ${error}`);
+        dispatch({ type: GET_CONTENT_DETAIL_FAIL, payload: error });
+    }
+}
+
 export const addContent = (form, type = 'fulfillment', id = "default") => async dispatch => {
     let res;
     console.log('idContent 2', id)
@@ -45,7 +56,7 @@ export const addContent = (form, type = 'fulfillment', id = "default") => async 
         if (id =="default")
             res = await api.post('/contents/v2/' + _type, JSON.stringify(form));
         else
-            res = await api.put('/contents/' + id, JSON.stringify(form));
+            res = await api.put(`/contents/v2/fulfillment/${id}/update`, JSON.stringify(form));
         dispatch({ type: ADD_CONTENT, payload: res.data });
     } catch (error) {
         Toast.fire({
