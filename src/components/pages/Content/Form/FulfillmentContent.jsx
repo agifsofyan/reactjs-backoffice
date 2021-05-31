@@ -82,10 +82,6 @@ const FulfillmentContent = ({
             name: 'created_at',
             direction: 'desc'
         },
-        // onTableChange: (action, state) => {
-        //     console.log(action);
-        //     console.dir(state);
-        // },
     }
     return (
         <React.Fragment>
